@@ -3,7 +3,7 @@ import java.util.Random;
 
 import ingame.Game;
 import ingame.GameState;
-import ingame.GraphicItem;
+import ingame.GraphicImgItem;
 import ingame.Player;
 
 public class NckuMonopoly {
@@ -46,13 +46,13 @@ public class NckuMonopoly {
 					int standardTick = 0;
 					for(int i=0; i<times; ++i) {
 						if(i<times/2) standardTick += 1;
-						else if(i==times-1) standardTick += 50;
+						else if(i==times-1) standardTick += 60;
 						else standardTick += i-times/2;
 						if(tick == standardTick) {
 							if(i == times-1) {
 								mainW.getPlayingPanel().deleteDie();
 								this.setGameState(GameState.MOVING);
-								this.tickStart(-20);
+								this.tickStart(0);
 							} else {
 								Random rng = new Random();
 								int newNum;
@@ -91,7 +91,7 @@ public class NckuMonopoly {
 			mainW.repaint();
 			//time out
 			try {
-				Thread.sleep(20);
+				Thread.sleep(33); //30 fps
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -102,7 +102,7 @@ public class NckuMonopoly {
 	public void start() {
 		this.setGameState(GameState.ROLLING); //page
 		//bg
-		GraphicItem bg = new GraphicItem(Game.Width/2, Game.Height/2, Game.Width, Game.Height, "/bg.png");
+		GraphicImgItem bg = new GraphicImgItem(Game.Width/2, Game.Height/2, Game.Width, Game.Height, "/bg.png");
 		Game.graphicItems.add(bg);
 		//players
 		for(int i=0; i<Game.playerCount; ++i) {

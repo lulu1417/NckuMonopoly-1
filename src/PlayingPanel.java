@@ -8,6 +8,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 import ingame.Game;
+import ingame.GraphicImgItem;
 import ingame.GraphicItem;
 
 public class PlayingPanel extends MainPanel{
@@ -35,7 +36,7 @@ public class PlayingPanel extends MainPanel{
 	public void createDie(int rollingNum) {
 		this.deleteDie();
 		String dieImg = "/die" + rollingNum + ".png";
-		this.die = new GraphicItem(Game.Width/2, Game.Height/2, 100, 100, dieImg);
+		this.die = new GraphicImgItem(Game.Width/2, Game.Height/2, 100, 100, dieImg);
 		Game.graphicItems.add(die);
 	}
 	public void deleteDie() {
@@ -45,5 +46,5 @@ public class PlayingPanel extends MainPanel{
 	}
 	//var
 	private ClickButton rollingButton;
-	private GraphicItem die;
+	private GraphicImgItem die;
 }
