@@ -5,12 +5,13 @@ import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.net.URL;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
 public class GraphicImgItem implements GraphicItem{
 	//ctor
-	public GraphicImgItem(int x, int y, int w, int h, String img_path) {
+	public GraphicImgItem(int x, int y, int w, int h, String img_path, ArrayList<GraphicItem> itemList) {
 		try {
 			URL url = this.getClass().getResource(img_path);
 	        this.img = ImageIO.read(url);
@@ -19,6 +20,7 @@ public class GraphicImgItem implements GraphicItem{
 	        System.out.println("This image file doesn't exist: "+img_path);
 	    }
 		this.rect = new Rectangle(x, y, w, h);
+		itemList.add(this);
 	}
 	
 	//method

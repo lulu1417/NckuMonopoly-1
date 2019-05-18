@@ -15,6 +15,7 @@ public class PlayingPanel extends MainPanel{
 	//ctor
 	public PlayingPanel(Dimension dim) {
 		super(dim);
+		this.normalSelections = new ClickButton[3];
 	}
 	//method
 	public void paint(Graphics g) {
@@ -25,19 +26,50 @@ public class PlayingPanel extends MainPanel{
 	public void createRollingButton() {
 		if(this.rollingButton != null) return;
 		int w = 250, h = 100;
-		this.rollingButton = new ClickButton((this.getWidth()-w)/2, (this.getHeight()-h)/2, w, h, "Roll");
+		double sc = (double)this.getWidth() / Game.Width;
+		this.rollingButton = new ClickButton((Game.Width-200)/2+200, Game.Height/2, w, h, sc, "擲骰子", "Roll");
 		this.add(rollingButton);
 	}
 	public void deleteRollingButton() {
 		if(this.rollingButton == null) return;
 		this.remove(rollingButton);
-		this.die = null;
+		this.rollingButton = null;
+	}
+	public void createNormalSelections() {
+		int w = 500, h = 100;
+		double sc = (double)this.getWidth() / Game.Width;
+		for(int i=0; i<3; ++i) {
+			if(this.normalSelections[i] != null) break;
+			String text, signal;
+			switch (i) {
+			case 0:
+				text = "寫點作業";
+				signal = "Select lesson";
+				break;
+			case 1:
+				text = "社團活動";
+				signal = "Select club";
+				break;
+			default:
+				text = "跟心上人聊天";
+				signal = "Select love";
+				break;
+			}
+			this.normalSelections[i] = new ClickButton((Game.Width-200)/2+200, Game.Height/2+(i-1)*(h+50), w, h, sc, text, signal);
+			this.add(normalSelections[i]);
+		}
+	}
+	public void deleteNormalSelections() {
+		for(int i=0; i<3; ++i) {
+			if(normalSelections[i] == null) break;
+			this.remove(normalSelections[i]);
+			normalSelections[i] = null;
+		}
 	}
 	public void createDie(int rollingNum) {
 		this.deleteDie();
 		String dieImg = "/die" + rollingNum + ".png";
-		this.die = new GraphicImgItem(Game.Width/2, Game.Height/2, 100, 100, dieImg);
-		Game.graphicItems.add(die);
+		this.die = new GraphicImgItem((Game.Width-200)/2+200, Game.Height/2, 100, 100, dieImg, Game.graphicItems);
 	}
 	public void deleteDie() {
 		if(this.die == null) return;
@@ -47,4 +79,5 @@ public class PlayingPanel extends MainPanel{
 	//var
 	private ClickButton rollingButton;
 	private GraphicImgItem die;
+	private ClickButton[] normalSelections;
 }

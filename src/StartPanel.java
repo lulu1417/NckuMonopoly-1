@@ -2,6 +2,8 @@ import java.awt.Dimension;
 
 import javax.swing.JPanel;
 
+import ingame.Game;
+
 public class StartPanel extends MainPanel{
 	//ctor
 	public StartPanel(Dimension dim) {
@@ -9,7 +11,8 @@ public class StartPanel extends MainPanel{
 		//start button
 		{
 			int w = 250, h = 100;
-			ClickButton startButton = new ClickButton((this.getWidth()-w)/2, (this.getHeight()-h)/2, w, h, "Start");
+			double sc = (double)this.getWidth() / Game.Width;
+			ClickButton startButton = new ClickButton(Game.Width/2, Game.Height/2, w, h, sc, "開始遊戲","Start");
 			this.add(startButton);
 		}
 	}

@@ -7,17 +7,17 @@ import ingame.Game;
 
 public class ClickButton extends JButton {
 	//ctor
-	public ClickButton(int x, int y, int w, int h, String text, String signal) {
+	public ClickButton(int x, int y, int w, int h, double sc, String text, String signal) {
 		super(text);
 		this.signal = signal;
-		this.setLocation(x,y);
+		this.setLocation((int) ((x-w/2)*sc), (int) ((y-h/2)*sc));
 		this.setSize(w,h);
 		//listener
 		ClickButton self = this;
 		ActionListener listener = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Game.signals.add(self.getSignal());
+				Game.signals.add("Button clicked: " + self.getSignal());
 			}
 		};
 		this.addActionListener(listener);
@@ -25,8 +25,8 @@ public class ClickButton extends JButton {
 		Font font = new Font("Microsoft Jhenghei", Font.BOLD, (int) (h*0.5));
 		this.setFont(font);
 	}
-	public ClickButton(int x, int y, int w, int h, String text) {
-		this(x, y, w, h, text, text);
+	public ClickButton(int x, int y, int w, int h, double sc, String text) {
+		this(x, y, w, h, sc, text, text);
 	}
 	//get-set
 	protected String getSignal() {
