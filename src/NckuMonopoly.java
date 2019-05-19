@@ -1,11 +1,14 @@
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Random;
 
 import ingame.CellType;
 import ingame.Game;
 import ingame.GameState;
 import ingame.GraphicImgItem;
+import ingame.GraphicItem;
+import ingame.GraphicTextItem;
 import ingame.Player;
 
 public class NckuMonopoly {
@@ -19,8 +22,13 @@ public class NckuMonopoly {
 	public NckuMonopoly() {
 		mainW = new MainWindow();
 		this.setGameState(GameState.START);
+		
 		//thread
 		while(true) {
+
+			//timer
+			for(int i=0; i<Game.graphicItems.size(); ++i) Game.graphicItems.get(i).timerRun();
+			
 			//receive signals
 			for(String signal: Game.signals) {
 				System.out.println("Got signal: "+signal);
@@ -37,12 +45,14 @@ public class NckuMonopoly {
 				case EVENT:
 					if(signal.startsWith("Button clicked: Select")) {
 						mainW.getPlayingPanel().deleteNormalSelections();
+						Random rng = new Random();
+						int add = rng.nextInt(4)+2;
 						if(signal.endsWith("lesson")) {
-							currentPlayer.setLesson(currentPlayer.getLesson()+1);
+							currentPlayer.addLesson(add);
 						} else if(signal.endsWith("club")) {
-							currentPlayer.setClub(currentPlayer.getClub()+1);
+							currentPlayer.addClub(add);
 						} else {
-							currentPlayer.setLove(currentPlayer.getLove()+1);
+							currentPlayer.addLove(add);
 						}
 						this.tickStart(21);
 					}
@@ -51,17 +61,21 @@ public class NckuMonopoly {
 				}
 			}
 			Game.signals.clear();
+			
 			//tick execution
 			switch (Game.gamestate) {
 			case ROLLING:
 				if(ticking) {
 					++tick;
-					final int times = 24;
+					final int times = 26;
 					int standardTick = 0;
+					int standardTickAdd = 1;
 					for(int i=0; i<times; ++i) {
-						if(i<times/2) standardTick += 1;
-						else standardTick += i-times/2;
+						standardTick += standardTickAdd;
+						if(i<times/2) standardTickAdd = 1;
+						else standardTickAdd = i-times/2;
 						if(tick == standardTick) {
+							//random choose new die number
 							Random rng = new Random();
 							int newNum;
 							if(this.rollingNum==0) newNum = rng.nextInt(6)+1;
@@ -70,8 +84,16 @@ public class NckuMonopoly {
 								if(newNum>=this.rollingNum) ++newNum;
 							}
 							this.rollingNum = newNum;
-							mainW.getPlayingPanel().createDie(newNum);
-							if(i == times-1) {
+							//die img
+							String dieImg = "/die" + newNum + ".png";
+							GraphicItem die = new GraphicImgItem((Game.Width-250)/2+250, Game.Height/2, 100, 100, dieImg, Game.graphicItems);
+							die.setLifeTime(i==times-1 ? 50 : standardTickAdd);
+							if(i == times-1) { //last time
+								//die number hint
+								String hintString = "擲出點數：" + newNum;
+								GraphicItem hint = new GraphicTextItem((Game.Width-250)/2+250-80, Game.Height/2-50, 30, hintString, Game.graphicItems);
+								hint.setLifeTime(50);
+								//change state
 								this.setGameState(GameState.MOVING);
 								this.tickStart(-30);
 							}
@@ -92,9 +114,8 @@ public class NckuMonopoly {
 				if(ticking) {
 					if(++tick==20) {
 						tickPause();
-						mainW.getPlayingPanel().deleteDie();
 						switch(currentPlayer.getCurrentCell().getCellType()) {
-							case NORMAL:
+							case NORMAL: //normal event
 								mainW.getPlayingPanel().createNormalSelections();
 								break;
 							default:
@@ -112,6 +133,14 @@ public class NckuMonopoly {
 			default:
 				break;
 			}
+			
+			//dead
+			Iterator<GraphicItem> it = Game.graphicItems.iterator();
+			while (it.hasNext()) {
+			    GraphicItem graphicItem = it.next();
+			    if (graphicItem.isDead()) it.remove();
+			}
+			
 			//repaint
 			mainW.repaint();
 			//time out

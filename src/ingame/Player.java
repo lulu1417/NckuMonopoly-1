@@ -21,11 +21,6 @@ public class Player extends GraphicImgItem {
 	}
 	//method
 	@Override
-	public void draw(Graphics g, double sc) {
-		super.draw(g, sc);
-		this.scoreboard.draw(g, sc);
-	}
-	@Override
 	protected int drawY(double sc) {
 		return (int) (rect.getY() * sc - drawH(sc) * 0.9);
 	}
@@ -45,6 +40,26 @@ public class Player extends GraphicImgItem {
 	}
 	public void createScoreBoard(int x, int y, String img_path, ArrayList<GraphicItem> itemList) {
 		this.scoreboard = new PlayerScoreboard(x, y, img_path, this.lesson, this.club, this.love, this.money, itemList);
+	}
+	public void addLesson(int add) {
+		this.lesson += add;
+		this.scoreboard.setLesson(this.lesson);
+		this.scoreboard.showLessonAddition(add);
+	}
+	public void addClub(int add) {
+		this.club += add;
+		this.scoreboard.setClub(this.club);
+		this.scoreboard.showClubAddition(add);
+	}
+	public void addLove(int add) {
+		this.love += add;
+		this.scoreboard.setLove(this.love);
+		this.scoreboard.showLoveAddition(add);
+	}
+	public void addMoney(int add) {
+		this.money += add;
+		this.scoreboard.setMoney(this.money);
+		this.scoreboard.showMoneyAddition(add);
 	}
 	//get-set
 	public void setLesson(int lesson) {

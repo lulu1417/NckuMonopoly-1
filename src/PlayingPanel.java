@@ -27,7 +27,7 @@ public class PlayingPanel extends MainPanel{
 		if(this.rollingButton != null) return;
 		int w = 250, h = 100;
 		double sc = (double)this.getWidth() / Game.Width;
-		this.rollingButton = new ClickButton((Game.Width-200)/2+200, Game.Height/2, w, h, sc, "擲骰子", "Roll");
+		this.rollingButton = new ClickButton((Game.Width-250)/2+250, Game.Height/2, w, h, sc, "擲骰子", "Roll");
 		this.add(rollingButton);
 	}
 	public void deleteRollingButton() {
@@ -55,7 +55,7 @@ public class PlayingPanel extends MainPanel{
 				signal = "Select love";
 				break;
 			}
-			this.normalSelections[i] = new ClickButton((Game.Width-200)/2+200, Game.Height/2+(i-1)*(h+50), w, h, sc, text, signal);
+			this.normalSelections[i] = new ClickButton((Game.Width-250)/2+250, Game.Height/2+(i-1)*(h+50), w, h, sc, text, signal);
 			this.add(normalSelections[i]);
 		}
 	}
@@ -66,18 +66,7 @@ public class PlayingPanel extends MainPanel{
 			normalSelections[i] = null;
 		}
 	}
-	public void createDie(int rollingNum) {
-		this.deleteDie();
-		String dieImg = "/die" + rollingNum + ".png";
-		this.die = new GraphicImgItem((Game.Width-200)/2+200, Game.Height/2, 100, 100, dieImg, Game.graphicItems);
-	}
-	public void deleteDie() {
-		if(this.die == null) return;
-		Game.graphicItems.remove(die);
-		this.die = null;
-	}
 	//var
 	private ClickButton rollingButton;
-	private GraphicImgItem die;
 	private ClickButton[] normalSelections;
 }

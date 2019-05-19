@@ -9,9 +9,10 @@ import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
-public class GraphicImgItem implements GraphicItem{
+public class GraphicImgItem extends GraphicItem {
 	//ctor
 	public GraphicImgItem(int x, int y, int w, int h, String img_path, ArrayList<GraphicItem> itemList) {
+		super();
 		try {
 			URL url = this.getClass().getResource(img_path);
 	        this.img = ImageIO.read(url);
