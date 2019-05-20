@@ -1,5 +1,7 @@
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Random;
 
@@ -140,9 +142,10 @@ public class NckuMonopoly {
 			    GraphicItem graphicItem = it.next();
 			    if (graphicItem.isDead()) it.remove();
 			}
-			
+
 			//repaint
 			mainW.repaint();
+			
 			//time out
 			try {
 				Thread.sleep(33); //30 fps
@@ -159,10 +162,18 @@ public class NckuMonopoly {
 		GraphicImgItem bg = new GraphicImgItem(Game.Width/2, Game.Height/2, Game.Width, Game.Height, "/bg.png", Game.graphicItems);
 		//players
 		for(int i=0; i<Game.playerCount; ++i) {
-			Player player = new Player(120, 120, "/player.png", 0, 0, 0, 5000, 0, i, Game.graphicItems);
+			String playerImg = "/player" + (i+1) + ".png";
+			Player player = new Player(77, 120, playerImg, 0, 0, 0, 1000, 0, i, Game.graphicItems);
 			player.createScoreBoard(20, 20+i*190, "/scoreboard"+ (i+1) +".png", Game.graphicItems);
 			if(i==0) this.currentPlayer = player;
 			Game.players.add(player);
+			if(i==Game.playerCount-1) {
+				try {
+					player.moveTo(0);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
 		}
 		//roll button
 		mainW.getPlayingPanel().createRollingButton();

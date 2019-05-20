@@ -3,6 +3,8 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.io.File;
 import java.net.URL;
+import java.util.Collections;
+import java.util.Comparator;
 
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
@@ -10,6 +12,7 @@ import javax.swing.JPanel;
 import ingame.Game;
 import ingame.GraphicImgItem;
 import ingame.GraphicItem;
+import ingame.Player;
 
 public class PlayingPanel extends MainPanel{
 	//ctor
@@ -19,6 +22,15 @@ public class PlayingPanel extends MainPanel{
 	}
 	//method
 	public void paint(Graphics g) {
+		Collections.sort(Game.graphicItems, new Comparator<GraphicItem>() {
+			public int compare(GraphicItem a, GraphicItem b) 
+			{
+				if(a.getZ() > b.getZ()) return 1;
+				if(a.getZ() == b.getZ()) return 0;
+				return -1;
+			}
+		});
+		//paint
 		double sc = (double)this.getWidth() / Game.Width;
 		for(GraphicItem graphicItem: Game.graphicItems) graphicItem.draw(g,sc);
 		super.paintComponents(g);

@@ -21,9 +21,13 @@ public abstract class GraphicItem {
 	public void kill() {
 		lifetime = timer;
 	}
+	public double getZ() {
+		return 0;
+	}
 	//get-set
 	public void setLifeTime(int lifetime) {
 		this.lifetime = lifetime;
 	}
+	//var
 	private int timer, lifetime;
 }

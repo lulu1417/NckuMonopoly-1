@@ -4,6 +4,8 @@ import java.awt.Graphics;
 import java.awt.Panel;
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import javax.swing.JPanel;
 
@@ -15,9 +17,9 @@ public class Player extends GraphicImgItem {
 		this.club = club;
 		this.love = love;
 		this.money = money;
-		this.currentCell = currentCell;
 		this.id = id;
 		this.scoreboard = null;
+		this.currentCell = currentCell;
 	}
 	//method
 	@Override
@@ -26,8 +28,29 @@ public class Player extends GraphicImgItem {
 	}
 	public void moveTo(int cell) throws Exception {
 		if(cell >= Game.cells.length) throw new Exception("This cell is not exist!");
+		int oldCell = this.currentCell;
 		this.currentCell = cell;
-		this.setPosition(Game.cells[this.currentCell]);
+		repositionPlayers(oldCell);
+		repositionPlayers(cell);
+	}
+	public static void repositionPlayers(int cell) {
+		//players in the same cell
+		ArrayList<Player> playersInCell = new ArrayList<Player>();
+		for(Player player: Game.players) if(player.currentCell == cell) playersInCell.add(player);
+		//position
+		if(playersInCell.size() == 1) { //one player
+			playersInCell.get(0).setPosition(Game.cells[cell]);
+		} else { // two or more
+			double angle = -Math.PI/8;
+			for(Player player: playersInCell) {
+				Point aim = Game.cells[cell];
+				Point biased = new Point(
+						(int) (40*Math.cos(angle) + aim.getX()),
+						(int) (30*Math.sin(angle) + aim.getY()));
+				player.setPosition(biased);
+				angle += 2*Math.PI/playersInCell.size();
+			}
+		}
 	}
 	public void moveToNext() {
 		int nextCell = this.currentCell+1;
@@ -95,6 +118,11 @@ public class Player extends GraphicImgItem {
 	}
 	public int getID() {
 		return this.id;
+	}
+	//player with more y should be paint more later
+	@Override
+	public double getZ() {
+		return this.getY();
 	}
 	//var
 	private int currentCell, id;

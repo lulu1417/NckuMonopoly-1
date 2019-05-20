@@ -46,7 +46,12 @@ public class GraphicImgItem extends GraphicItem {
 	public void setPosition(Point pos) {
 		this.rect.setLocation(pos);
 	}
-	
+	public double getX() {
+		return this.rect.getX();
+	}
+	public double getY() {
+		return this.rect.getY();
+	}
 	//var
 	protected Rectangle rect;
 	protected Image img;
