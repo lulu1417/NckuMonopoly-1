@@ -67,6 +67,10 @@ public class NckuMonopoly {
 			//tick execution
 			switch (Game.gamestate) {
 			case ROLLING:
+				for(Player player: Game.players) {
+					if(player == currentPlayer) player.select();
+					else player.unselect();
+				}
 				if(ticking) {
 					++tick;
 					final int times = 26;
@@ -164,7 +168,7 @@ public class NckuMonopoly {
 		for(int i=0; i<Game.playerCount; ++i) {
 			String playerImg = "/player" + (i+1) + ".png";
 			Player player = new Player(77, 120, playerImg, 0, 0, 0, 1000, 0, i, Game.graphicItems);
-			player.createScoreBoard(20, 20+i*190, "/scoreboard"+ (i+1) +".png", Game.graphicItems);
+			player.createScoreBoard(20, 50+i*200, "/scoreboard"+ (i+1) +".png", Game.graphicItems);
 			if(i==0) this.currentPlayer = player;
 			Game.players.add(player);
 			if(i==Game.playerCount-1) {

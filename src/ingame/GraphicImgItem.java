@@ -1,6 +1,8 @@
 package ingame;
 
+import java.awt.AlphaComposite;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -22,12 +24,16 @@ public class GraphicImgItem extends GraphicItem {
 	    }
 		this.rect = new Rectangle(x, y, w, h);
 		itemList.add(this);
+		this.opacity = 1.0;
 	}
 	
 	//method
 	@Override
 	public void draw(Graphics g, double sc) {
-        g.drawImage(this.img, this.drawX(sc), this.drawY(sc), this.drawW(sc), this.drawH(sc), null);
+		Graphics2D g2 = (Graphics2D)g;
+		AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) opacity);
+		g2.setComposite(ac);
+		g2.drawImage(this.img, this.drawX(sc), this.drawY(sc), this.drawW(sc), this.drawH(sc), null);
 	}
 	protected int drawW(double sc) {
 		return (int) (rect.getWidth()*sc);
@@ -52,7 +58,9 @@ public class GraphicImgItem extends GraphicItem {
 	public double getY() {
 		return this.rect.getY();
 	}
+	
 	//var
 	protected Rectangle rect;
 	protected Image img;
+	protected double opacity;
 }

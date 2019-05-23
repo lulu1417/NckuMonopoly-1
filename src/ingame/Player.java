@@ -44,8 +44,9 @@ public class Player extends GraphicImgItem {
 			double angle = -Math.PI/8;
 			for(Player player: playersInCell) {
 				Point aim = Game.cells[cell];
+				int bias_w = playersInCell.size()*13;
 				Point biased = new Point(
-						(int) (40*Math.cos(angle) + aim.getX()),
+						(int) (bias_w*Math.cos(angle) + aim.getX()),
 						(int) (30*Math.sin(angle) + aim.getY()));
 				player.setPosition(biased);
 				angle += 2*Math.PI/playersInCell.size();
@@ -118,6 +119,14 @@ public class Player extends GraphicImgItem {
 	}
 	public int getID() {
 		return this.id;
+	}
+	public void select() {
+		this.opacity = 1.0;
+		this.scoreboard.select();
+	}
+	public void unselect() {
+		this.opacity = 0.5;
+		this.scoreboard.unselect();
 	}
 	//player with more y should be paint more later
 	@Override

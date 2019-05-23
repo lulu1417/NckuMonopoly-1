@@ -1,5 +1,7 @@
+import java.awt.AlphaComposite;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.io.File;
 import java.net.URL;
@@ -33,6 +35,9 @@ public class PlayingPanel extends MainPanel{
 		//paint
 		double sc = (double)this.getWidth() / Game.Width;
 		for(GraphicItem graphicItem: Game.graphicItems) graphicItem.draw(g,sc);
+		Graphics2D g2 = (Graphics2D)g;
+		AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) 1.0);
+		g2.setComposite(ac);
 		super.paintComponents(g);
 	}
 	public void createRollingButton() {

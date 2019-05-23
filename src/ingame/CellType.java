@@ -4,6 +4,5 @@ public enum CellType {
 	NORMAL,
 	CHANCE,
 	FATE,
-	SHOP,
-	LITTLE_GAME
+	SHOP
 }

@@ -48,12 +48,15 @@ public class PlayerScoreboard extends GraphicImgItem{
 	}
 	private void showAddition(int type, int add) {
 		String message, bg;
+		Color color;
 		if(add>0) {
 			bg = "/additionBg1.png";
 			message = "+" + add;
+			color = new Color(0x008040);
 		} else if(add<0) {
 			bg = "/additionBg2.png";
 			message = "-" + (-add);
+			color = new Color(0xCA0000);
 		}
 		else return;
 		int x = (int) this.rect.getX() + 200;
@@ -66,6 +69,7 @@ public class PlayerScoreboard extends GraphicImgItem{
 		if(this.additions[type] != null) this.additions[type].kill();
 		this.additions[type] = new GraphicTextItem(x, y, fontSize, message, Game.graphicItems);
 		this.additions[type].setLifeTime(60);
+		this.additions[type].setColor(color);
 	}
 	public void showLessonAddition(int add) {
 		this.showAddition(0, add);
@@ -91,6 +95,12 @@ public class PlayerScoreboard extends GraphicImgItem{
 	}
 	public void setMoney(int money) {
 		this.num[3].setText(Integer.toString(money));
+	}
+	public void select() {
+		this.opacity = 1.0;
+	}
+	public void unselect() {
+		this.opacity = 0.5;
 	}
 	//var
 	private GraphicTextItem[] text;
