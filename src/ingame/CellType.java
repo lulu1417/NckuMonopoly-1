@@ -1,8 +1,11 @@
 package ingame;
 
 public enum CellType {
-	NORMAL,
+	START,
+	NOTHING,
+	SELECT,
 	CHANCE,
 	FATE,
-	SHOP
+	SHOP,
+	HOSPITAL
 }

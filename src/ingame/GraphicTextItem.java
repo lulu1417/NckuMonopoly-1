@@ -1,8 +1,10 @@
 package ingame;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -25,15 +27,21 @@ public class GraphicTextItem extends GraphicItem{
 	//method
 	@Override
 	public void draw(Graphics g, double sc) {
+		Graphics2D g2 = (Graphics2D)g;
+		AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) opacity);
+		g2.setComposite(ac);
 		g.setFont(new Font("Microsoft Jhenghei", Font.BOLD, (int) (fontSize*sc)));
 		g.setColor(this.color);
 		g.drawString(text, this.drawX(sc), this.drawY(sc));
+	}
+	protected int drawW(double sc) {
+		return (int) (text.length()*fontSize*sc);
 	}
 	protected int drawH(double sc) {
 		return (int) (fontSize*sc);
 	}
 	protected int drawX(double sc) {
-		return (int) (pos.getX() * sc);
+		return (int) (pos.getX() * sc - drawW(sc) * 0.5);
 	}
 	protected int drawY(double sc) {
 		return (int) (pos.getY() * sc - drawH(sc) * 0.5);

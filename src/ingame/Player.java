@@ -121,11 +121,11 @@ public class Player extends GraphicImgItem {
 		return this.id;
 	}
 	public void select() {
-		this.opacity = 1.0;
+		this.setOpacity(1.0);
 		this.scoreboard.select();
 	}
 	public void unselect() {
-		this.opacity = 0.5;
+		this.setOpacity(0.5);
 		this.scoreboard.unselect();
 	}
 	//player with more y should be paint more later

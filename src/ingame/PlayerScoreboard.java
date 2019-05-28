@@ -32,8 +32,8 @@ public class PlayerScoreboard extends GraphicImgItem{
 				title = "金錢：";
 				number = money;
 			}
-			this.text[i] = new GraphicTextItem(x+20, y+60+37*i, fontSize, title, itemList);
-			this.num[i] = new GraphicTextItem(x+110, y+60+37*i, fontSize, Integer.toString(number), itemList);
+			this.text[i] = new GraphicTextItem(x+65, y+60+37*i, fontSize, title, itemList);
+			this.num[i] = new GraphicTextItem(x+155, y+60+37*i, fontSize, Integer.toString(number), itemList);
 		}
 		this.additions = new GraphicTextItem[3];
 		for(int i=0; i<this.additions.length; ++i) this.additions[i] = null;
@@ -47,24 +47,18 @@ public class PlayerScoreboard extends GraphicImgItem{
 		return (int) (rect.getY() * sc);
 	}
 	private void showAddition(int type, int add) {
-		String message, bg;
+		String message;
 		Color color;
 		if(add>0) {
-			bg = "/additionBg1.png";
 			message = "+" + add;
 			color = new Color(0x008040);
 		} else if(add<0) {
-			bg = "/additionBg2.png";
 			message = "-" + (-add);
 			color = new Color(0xCA0000);
 		}
 		else return;
-		int x = (int) this.rect.getX() + 200;
+		int x = (int) this.rect.getX() + 245;
 		int y = (int) this.rect.getY() + 60 + 37*type;
-		//background
-		if(this.additions[type] != null) this.additions[type].kill();
-		this.additionBgs[type] = new GraphicImgItem(x+25, y-25, 63, 50, bg, Game.graphicItems);
-		this.additionBgs[type].setLifeTime(60);
 		//addition number
 		if(this.additions[type] != null) this.additions[type].kill();
 		this.additions[type] = new GraphicTextItem(x, y, fontSize, message, Game.graphicItems);

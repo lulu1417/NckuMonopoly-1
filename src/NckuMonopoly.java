@@ -1,3 +1,4 @@
+import java.awt.MouseInfo;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -5,6 +6,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Random;
 
+import ingame.Cell;
 import ingame.CellType;
 import ingame.Game;
 import ingame.GameState;
@@ -24,7 +26,7 @@ public class NckuMonopoly {
 	public NckuMonopoly() {
 		mainW = new MainWindow();
 		this.setGameState(GameState.START);
-		
+		this.steppedScore = 0;
 		//thread
 		while(true) {
 
@@ -46,15 +48,14 @@ public class NckuMonopoly {
 					break;
 				case EVENT:
 					if(signal.startsWith("Button clicked: Select")) {
-						mainW.getPlayingPanel().deleteNormalSelections();
+						mainW.getPlayingPanel().deleteSelections();
 						Random rng = new Random();
-						int add = rng.nextInt(4)+2;
 						if(signal.endsWith("lesson")) {
-							currentPlayer.addLesson(add);
+							currentPlayer.addLesson(this.steppedScore);
 						} else if(signal.endsWith("club")) {
-							currentPlayer.addClub(add);
+							currentPlayer.addClub(this.steppedScore);
 						} else {
-							currentPlayer.addLove(add);
+							currentPlayer.addLove(this.steppedScore);
 						}
 						this.tickStart(21);
 					}
@@ -63,6 +64,17 @@ public class NckuMonopoly {
 				}
 			}
 			Game.signals.clear();
+
+			//mouse
+			if(Game.gamestate != GameState.START && Game.gamestate != GameState.END) {
+				Point mouse_pos = mainW.getPlayingPanel().getMouseLocation();
+				for(Cell cell_pos: Game.cells) {
+					if((Math.abs(mouse_pos.getX() - cell_pos.getX()) < 50) && (Math.abs(mouse_pos.getY() - cell_pos.getY()) < 50)) {
+						mainW.getPlayingPanel().showCellName(cell_pos, cell_pos.getName());
+						break;
+					}
+				}
+			}
 			
 			//tick execution
 			switch (Game.gamestate) {
@@ -97,7 +109,7 @@ public class NckuMonopoly {
 							if(i == times-1) { //last time
 								//die number hint
 								String hintString = "擲出點數：" + newNum;
-								GraphicItem hint = new GraphicTextItem((Game.Width-250)/2+250-80, Game.Height/2-50, 30, hintString, Game.graphicItems);
+								GraphicItem hint = new GraphicTextItem((Game.Width-250)/2+250, Game.Height/2-50, 30, hintString, Game.graphicItems);
 								hint.setLifeTime(50);
 								//change state
 								this.setGameState(GameState.MOVING);
@@ -120,9 +132,34 @@ public class NckuMonopoly {
 				if(ticking) {
 					if(++tick==20) {
 						tickPause();
-						switch(currentPlayer.getCurrentCell().getCellType()) {
-							case NORMAL: //normal event
-								mainW.getPlayingPanel().createNormalSelections();
+						Cell steppedCell = currentPlayer.getCurrentCell();
+						switch(steppedCell.getCellType()) {
+							case SELECT: //normal event
+								String selections[];
+								switch(steppedCell.getSelectPolicy()) {
+									case ALL: {
+										String selections_temp[] = {"課業", "社團", "愛情"};
+										selections = selections_temp;
+										} break;
+									case ONLY_LESSON: {
+										String selections_temp[] = {"課業","",""}; 
+										selections = selections_temp;
+										} break;
+									case ONLY_CLUB: {
+										String selections_temp[] = {"","社團",""}; 
+										selections = selections_temp;
+										} break;
+									default: {
+										String selections_temp[] = {"","","愛情"}; 
+										selections = selections_temp;
+										} break;
+								}
+								int score = steppedCell.getScore();
+								this.steppedScore = score;
+								for(int i=0;i<selections.length;++i)
+									if(!selections[i].equals(""))
+										selections[i] = selections[i] + (score>0?"+":"") + score;
+								mainW.getPlayingPanel().createSelections(steppedCell.getMessage(),selections[0],selections[1],selections[2]);
 								break;
 							default:
 						}
@@ -167,7 +204,7 @@ public class NckuMonopoly {
 		//players
 		for(int i=0; i<Game.playerCount; ++i) {
 			String playerImg = "/player" + (i+1) + ".png";
-			Player player = new Player(77, 120, playerImg, 0, 0, 0, 1000, 0, i, Game.graphicItems);
+			Player player = new Player(77, 120, playerImg, 100, 100, 100, 100, 0, i, Game.graphicItems);
 			player.createScoreBoard(20, 50+i*200, "/scoreboard"+ (i+1) +".png", Game.graphicItems);
 			if(i==0) this.currentPlayer = player;
 			Game.players.add(player);
@@ -216,5 +253,5 @@ public class NckuMonopoly {
 	private long tick;
 	private boolean ticking;
 	private Player currentPlayer;
-	private int rollingNum;
+	private int rollingNum, steppedScore;
 }

@@ -24,7 +24,6 @@ public class GraphicImgItem extends GraphicItem {
 	    }
 		this.rect = new Rectangle(x, y, w, h);
 		itemList.add(this);
-		this.opacity = 1.0;
 	}
 	
 	//method
@@ -62,5 +61,4 @@ public class GraphicImgItem extends GraphicItem {
 	//var
 	protected Rectangle rect;
 	protected Image img;
-	protected double opacity;
 }

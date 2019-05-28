@@ -3,6 +3,8 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.MouseInfo;
+import java.awt.Point;
 import java.io.File;
 import java.net.URL;
 import java.util.Collections;
@@ -11,19 +13,27 @@ import java.util.Comparator;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
+import ingame.Cell;
 import ingame.Game;
 import ingame.GraphicImgItem;
 import ingame.GraphicItem;
+import ingame.GraphicTextItem;
 import ingame.Player;
 
 public class PlayingPanel extends MainPanel{
 	//ctor
 	public PlayingPanel(Dimension dim) {
 		super(dim);
-		this.normalSelections = new ClickButton[3];
+		this.selections = new ClickButton[3];
+		this.mouse_pos = new Point(0,0);
 	}
 	//method
 	public void paint(Graphics g) {
+		double sc = (double)this.getWidth() / Game.Width;
+		//mouse
+		Point mouse_pos_temp = MouseInfo.getPointerInfo().getLocation();
+		this.mouse_pos.setLocation((mouse_pos_temp.getX()-this.getX())/sc, (mouse_pos_temp.getY()-this.getY())/sc);
+		//sort
 		Collections.sort(Game.graphicItems, new Comparator<GraphicItem>() {
 			public int compare(GraphicItem a, GraphicItem b) 
 			{
@@ -33,12 +43,15 @@ public class PlayingPanel extends MainPanel{
 			}
 		});
 		//paint
-		double sc = (double)this.getWidth() / Game.Width;
 		for(GraphicItem graphicItem: Game.graphicItems) graphicItem.draw(g,sc);
 		Graphics2D g2 = (Graphics2D)g;
 		AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) 1.0);
 		g2.setComposite(ac);
 		super.paintComponents(g);
+	}
+	public void showCellName(Cell cell, String cellName) {
+		this.cellName = new GraphicTextItem((int) cell.getX(), (int) (cell.getY()), 25, cellName, Game.graphicItems);
+		this.cellName.setLifeTime(1);
 	}
 	public void createRollingButton() {
 		if(this.rollingButton != null) return;
@@ -52,38 +65,52 @@ public class PlayingPanel extends MainPanel{
 		this.remove(rollingButton);
 		this.rollingButton = null;
 	}
-	public void createNormalSelections() {
+	public void createSelections(String eventName, String selection1, String selection2, String selection3) {
 		int w = 500, h = 100;
 		double sc = (double)this.getWidth() / Game.Width;
+		if(this.eventName != null) this.eventName.kill();
+		this.eventName = new GraphicTextItem((Game.Width-250)/2+250-50,(int) (Game.Height/2-2*(h+25)+50+(0.5*h)),(int) (0.5*h), eventName, Game.graphicItems);
 		for(int i=0; i<3; ++i) {
-			if(this.normalSelections[i] != null) break;
 			String text, signal;
 			switch (i) {
 			case 0:
-				text = "寫點作業";
+				text = selection1;
 				signal = "Select lesson";
 				break;
 			case 1:
-				text = "社團活動";
+				text = selection2;
 				signal = "Select club";
 				break;
 			default:
-				text = "跟心上人聊天";
+				text = selection3;
 				signal = "Select love";
 				break;
 			}
-			this.normalSelections[i] = new ClickButton((Game.Width-250)/2+250, Game.Height/2+(i-1)*(h+50), w, h, sc, text, signal);
-			this.add(normalSelections[i]);
+			if(text.equals("")) {
+				if(this.selections[i] != null) this.selections[i] = null;
+				continue;
+			}
+			this.selections[i] = new ClickButton((Game.Width-250)/2+250, Game.Height/2+(i-1)*(h+25)+50, w, h, sc, text, signal);
+			this.add(selections[i]);
 		}
 	}
-	public void deleteNormalSelections() {
+	public void deleteSelections() {
 		for(int i=0; i<3; ++i) {
-			if(normalSelections[i] == null) break;
-			this.remove(normalSelections[i]);
-			normalSelections[i] = null;
+			if(selections[i] == null) continue;
+			this.remove(selections[i]);
+			selections[i] = null;
 		}
+		if(eventName == null) return;
+		eventName.kill();
+		eventName = null;
+	}
+	//set-get
+	public Point getMouseLocation() {
+		return this.mouse_pos;
 	}
 	//var
+	private GraphicItem eventName, cellName;
 	private ClickButton rollingButton;
-	private ClickButton[] normalSelections;
+	private ClickButton[] selections;
+	private Point mouse_pos;
 }

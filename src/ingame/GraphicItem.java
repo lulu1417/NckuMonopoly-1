@@ -7,6 +7,7 @@ public abstract class GraphicItem {
 	public GraphicItem() {
 		this.timer = 0;
 		this.lifetime = -1;
+		this.opacity = 1.0;
 	}
 	//method
 	public abstract void draw(Graphics g, double sc);
@@ -28,6 +29,10 @@ public abstract class GraphicItem {
 	public void setLifeTime(int lifetime) {
 		this.lifetime = lifetime;
 	}
+	public void setOpacity(double opacity) {
+		this.opacity = opacity;
+	}
 	//var
 	private int timer, lifetime;
+	protected double opacity;
 }
