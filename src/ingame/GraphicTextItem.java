@@ -37,14 +37,11 @@ public class GraphicTextItem extends GraphicItem{
 	protected int drawW(double sc) {
 		return (int) (text.length()*fontSize*sc);
 	}
-	protected int drawH(double sc) {
-		return (int) (fontSize*sc);
-	}
 	protected int drawX(double sc) {
 		return (int) (pos.getX() * sc - drawW(sc) * 0.5);
 	}
 	protected int drawY(double sc) {
-		return (int) (pos.getY() * sc - drawH(sc) * 0.5);
+		return (int) (pos.getY() * sc + fontSize * sc * 0.4);
 	}
 	
 	//get-set

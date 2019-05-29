@@ -11,7 +11,6 @@ public class PlayerScoreboard extends GraphicImgItem{
 		this.text = new GraphicTextItem[4];
 		this.num = new GraphicTextItem[4];
 		this.additions = new GraphicTextItem[4];
-		this.additionBgs = new GraphicImgItem[4];
 		for(int i=0; i<4; ++i) {
 			int number;
 			String title;
@@ -32,8 +31,8 @@ public class PlayerScoreboard extends GraphicImgItem{
 				title = "金錢：";
 				number = money;
 			}
-			this.text[i] = new GraphicTextItem(x+65, y+60+37*i, fontSize, title, itemList);
-			this.num[i] = new GraphicTextItem(x+155, y+60+37*i, fontSize, Integer.toString(number), itemList);
+			this.text[i] = new GraphicTextItem(x+65, y+30+37*i, fontSize, title, itemList);
+			this.num[i] = new GraphicTextItem(x+155, y+30+37*i, fontSize, Integer.toString(number), itemList);
 		}
 		this.additions = new GraphicTextItem[3];
 		for(int i=0; i<this.additions.length; ++i) this.additions[i] = null;
@@ -58,7 +57,7 @@ public class PlayerScoreboard extends GraphicImgItem{
 		}
 		else return;
 		int x = (int) this.rect.getX() + 245;
-		int y = (int) this.rect.getY() + 60 + 37*type;
+		int y = (int) this.rect.getY() + 30 + 37*type;
 		//addition number
 		if(this.additions[type] != null) this.additions[type].kill();
 		this.additions[type] = new GraphicTextItem(x, y, fontSize, message, Game.graphicItems);
@@ -91,15 +90,22 @@ public class PlayerScoreboard extends GraphicImgItem{
 		this.num[3].setText(Integer.toString(money));
 	}
 	public void select() {
-		this.opacity = 1.0;
+		this.setOpacity(1.0);
+		for(int i=0;i<Game.playerCount;++i) {
+			this.text[i].setOpacity(1.0);
+			this.num[i].setOpacity(1.0);
+		}
 	}
 	public void unselect() {
-		this.opacity = 0.5;
+		this.setOpacity(0.5);
+		for(int i=0;i<Game.playerCount;++i) {
+			this.text[i].setOpacity(0.5);
+			this.num[i].setOpacity(0.5);
+		}
 	}
 	//var
 	private GraphicTextItem[] text;
 	private GraphicTextItem[] num;
 	private GraphicTextItem[] additions;
-	private GraphicImgItem[] additionBgs;
 	public static final int fontSize = 30;
 }

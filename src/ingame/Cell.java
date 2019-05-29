@@ -10,7 +10,7 @@ public class Cell extends Point{
 		this.cellType = cellType;
 		this.score = 0;
 		this.message = "";
-		this.selectPolicy = SelectPolicy.ALL;
+		this.selectPolicy = PlayerScoreType.THREE;
 	}
 	//get-set
 	public CellType getCellType() {
@@ -24,7 +24,7 @@ public class Cell extends Point{
 		this.message = message;
 		return this;
 	}
-	public Cell setSelectPolicy(SelectPolicy selectPolicy) {
+	public Cell setSelectPolicy(PlayerScoreType selectPolicy) {
 		this.selectPolicy = selectPolicy;
 		return this;
 	}
@@ -37,12 +37,12 @@ public class Cell extends Point{
 	public String getMessage() {
 		return this.message;
 	}
-	public SelectPolicy getSelectPolicy() {
+	public PlayerScoreType getSelectPolicy() {
 		return this.selectPolicy;
 	}
 	//var
 	private String name, message;
 	private CellType cellType;
 	private int score;
-	private SelectPolicy selectPolicy;
+	private PlayerScoreType selectPolicy;
 }

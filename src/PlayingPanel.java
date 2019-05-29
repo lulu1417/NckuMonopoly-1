@@ -1,4 +1,5 @@
 import java.awt.AlphaComposite;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -32,7 +33,7 @@ public class PlayingPanel extends MainPanel{
 		double sc = (double)this.getWidth() / Game.Width;
 		//mouse
 		Point mouse_pos_temp = MouseInfo.getPointerInfo().getLocation();
-		this.mouse_pos.setLocation((mouse_pos_temp.getX()-this.getX())/sc, (mouse_pos_temp.getY()-this.getY())/sc);
+		this.mouse_pos.setLocation((mouse_pos_temp.getX()-this.getLocationOnScreen().getX())/sc, (mouse_pos_temp.getY()-this.getLocationOnScreen().getY())/sc);
 		//sort
 		Collections.sort(Game.graphicItems, new Comparator<GraphicItem>() {
 			public int compare(GraphicItem a, GraphicItem b) 
@@ -50,8 +51,18 @@ public class PlayingPanel extends MainPanel{
 		super.paintComponents(g);
 	}
 	public void showCellName(Cell cell, String cellName) {
-		this.cellName = new GraphicTextItem((int) cell.getX(), (int) (cell.getY()), 25, cellName, Game.graphicItems);
+		int x = (int) cell.getX(), y = (int) (cell.getY());
+		this.cellNameBg = new GraphicImgItem(x, y, 164, 40, "/cellNameBg.png", Game.graphicItems);
+		this.cellNameBg.setZ(1000);
+		this.cellNameBg.setLifeTime(1);
+		this.cellName = new GraphicTextItem(x, y, 25, cellName, Game.graphicItems);
+		this.cellName.setZ(1000);
 		this.cellName.setLifeTime(1);
+	}
+	public void showEventName(String eventName, int x, int y, int lifetime) {
+		if(this.eventName != null) this.eventName.kill();
+		this.eventName = new GraphicTextItem(x, y, 50, eventName, Game.graphicItems);
+		this.eventName.setLifeTime(lifetime);
 	}
 	public void createRollingButton() {
 		if(this.rollingButton != null) return;
@@ -68,8 +79,7 @@ public class PlayingPanel extends MainPanel{
 	public void createSelections(String eventName, String selection1, String selection2, String selection3) {
 		int w = 500, h = 100;
 		double sc = (double)this.getWidth() / Game.Width;
-		if(this.eventName != null) this.eventName.kill();
-		this.eventName = new GraphicTextItem((Game.Width-250)/2+250-50,(int) (Game.Height/2-2*(h+25)+50+(0.5*h)),(int) (0.5*h), eventName, Game.graphicItems);
+		this.showEventName(eventName, (Game.Width-250)/2+250-50,(int) (Game.Height/2-2*(h+25)+10+(0.5*h)), -1);
 		for(int i=0; i<3; ++i) {
 			String text, signal;
 			switch (i) {
@@ -109,7 +119,7 @@ public class PlayingPanel extends MainPanel{
 		return this.mouse_pos;
 	}
 	//var
-	private GraphicItem eventName, cellName;
+	private GraphicItem cellNameBg, eventName, cellName;
 	private ClickButton rollingButton;
 	private ClickButton[] selections;
 	private Point mouse_pos;

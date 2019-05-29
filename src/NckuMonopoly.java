@@ -101,7 +101,7 @@ public class NckuMonopoly {
 								newNum = rng.nextInt(5)+1;
 								if(newNum>=this.rollingNum) ++newNum;
 							}
-							this.rollingNum = newNum;
+							this.rollingNum = newNum; //debug
 							//die img
 							String dieImg = "/die" + newNum + ".png";
 							GraphicItem die = new GraphicImgItem((Game.Width-250)/2+250, Game.Height/2, 100, 100, dieImg, Game.graphicItems);
@@ -109,7 +109,7 @@ public class NckuMonopoly {
 							if(i == times-1) { //last time
 								//die number hint
 								String hintString = "擲出點數：" + newNum;
-								GraphicItem hint = new GraphicTextItem((Game.Width-250)/2+250, Game.Height/2-50, 30, hintString, Game.graphicItems);
+								GraphicItem hint = new GraphicTextItem((Game.Width-250)/2+250, Game.Height/2-80, 30, hintString, Game.graphicItems);
 								hint.setLifeTime(50);
 								//change state
 								this.setGameState(GameState.MOVING);
@@ -134,18 +134,22 @@ public class NckuMonopoly {
 						tickPause();
 						Cell steppedCell = currentPlayer.getCurrentCell();
 						switch(steppedCell.getCellType()) {
-							case SELECT: //normal event
+							case NOTHING: //no event
+								mainW.getPlayingPanel().showEventName("這裡什麼都沒有...", (Game.Width-250)/2+250-50, Game.Height/2-100, 50);
+								tickStart(21);
+								break;
+							case SELECT: //select event
 								String selections[];
 								switch(steppedCell.getSelectPolicy()) {
-									case ALL: {
+									case THREE: {
 										String selections_temp[] = {"課業", "社團", "愛情"};
 										selections = selections_temp;
 										} break;
-									case ONLY_LESSON: {
+									case LESSON: {
 										String selections_temp[] = {"課業","",""}; 
 										selections = selections_temp;
 										} break;
-									case ONLY_CLUB: {
+									case CLUB: {
 										String selections_temp[] = {"","社團",""}; 
 										selections = selections_temp;
 										} break;
@@ -161,7 +165,15 @@ public class NckuMonopoly {
 										selections[i] = selections[i] + (score>0?"+":"") + score;
 								mainW.getPlayingPanel().createSelections(steppedCell.getMessage(),selections[0],selections[1],selections[2]);
 								break;
-							default:
+							case START: //start event
+								mainW.getPlayingPanel().showEventName("回到起點，獲得一百元", (Game.Width-250)/2+250-50, Game.Height/2-100, 50);
+								currentPlayer.addMoney(100);
+								tickStart(21);
+								break;
+							default: //chance event, fate event
+								mainW.getPlayingPanel().showEventName("此格尚未完成", (Game.Width-250)/2+250-50, Game.Height/2-100, 50);
+								tickStart(21);
+								break;
 						}
 					} else if(tick>=50) {
 						int id = this.currentPlayer.getID();

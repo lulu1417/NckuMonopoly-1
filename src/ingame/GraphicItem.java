@@ -8,6 +8,7 @@ public abstract class GraphicItem {
 		this.timer = 0;
 		this.lifetime = -1;
 		this.opacity = 1.0;
+		this.z = 0;
 	}
 	//method
 	public abstract void draw(Graphics g, double sc);
@@ -23,7 +24,10 @@ public abstract class GraphicItem {
 		lifetime = timer;
 	}
 	public double getZ() {
-		return 0;
+		return z;
+	}
+	public void setZ(double z) {
+		this.z = z;
 	}
 	//get-set
 	public void setLifeTime(int lifetime) {
@@ -35,4 +39,5 @@ public abstract class GraphicItem {
 	//var
 	private int timer, lifetime;
 	protected double opacity;
+	private double z;
 }
