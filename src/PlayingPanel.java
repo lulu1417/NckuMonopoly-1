@@ -1,25 +1,17 @@
 import java.awt.AlphaComposite;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.MouseInfo;
 import java.awt.Point;
-import java.io.File;
-import java.net.URL;
 import java.util.Collections;
 import java.util.Comparator;
-
-import javax.imageio.ImageIO;
-import javax.swing.JPanel;
 
 import ingame.Cell;
 import ingame.Game;
 import ingame.GraphicImgItem;
 import ingame.GraphicItem;
 import ingame.GraphicTextItem;
-import ingame.Player;
 
 public class PlayingPanel extends MainPanel{
 	//ctor

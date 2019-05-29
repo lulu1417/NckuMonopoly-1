@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Random;
+import java.util.Scanner;
 
 import ingame.Cell;
 import ingame.CellType;
@@ -60,13 +61,38 @@ public class NckuMonopoly {
 						this.tickStart(21);
 					}
 					break;
+				case FATE:
+					try {
+						Scanner scanner = new Scanner(signal);
+						String fateIdentifier = scanner.next() + " " + scanner.next();
+						if(fateIdentifier.equals("Fate ended:")) {
+							int fateType = scanner.nextInt();
+							int fatePoint = scanner.nextInt();
+							switch (fateType) {
+							case 1:
+								currentPlayer.addLesson(fatePoint);
+								break;
+							case 2:
+								currentPlayer.addClub(fatePoint);
+								break;
+							default:
+								currentPlayer.addLove(fatePoint);
+								break;
+							}
+							this.setGameState(GameState.EVENT);
+							this.tickStart(21);
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					break;
 				default:
 				}
 			}
 			Game.signals.clear();
 
 			//mouse
-			if(Game.gamestate != GameState.START && Game.gamestate != GameState.END) {
+			if(Game.gamestate != GameState.START && Game.gamestate != GameState.END && Game.gamestate != GameState.FATE) {
 				Point mouse_pos = mainW.getPlayingPanel().getMouseLocation();
 				for(Cell cell_pos: Game.cells) {
 					if((Math.abs(mouse_pos.getX() - cell_pos.getX()) < 50) && (Math.abs(mouse_pos.getY() - cell_pos.getY()) < 50)) {
@@ -208,20 +234,32 @@ public class NckuMonopoly {
 									break;
 								}
 								break;
-							default: //fate event, shop event
+							case FATE: //fate event
+								mainW.getPlayingPanel().showEventName("命運：" + steppedCell.getMessage(), (Game.Width-250)/2+250-50, Game.Height/2-100, 60);
+								tickStart(51);
+								break;
+							default: //shop event
 								mainW.getPlayingPanel().showEventName("此格尚未完成", (Game.Width-250)/2+250-50, Game.Height/2-100, 90);
 								tickStart(21);
 								break;
 						}
-					} else if(tick>=50) {
+					} else if(tick==50) { //next player's rolling state
 						int id = this.currentPlayer.getID();
 						if(++id>=Game.playerCount) id=0;
 						this.currentPlayer = Game.players.get(id);
 						this.setGameState(GameState.ROLLING);
 						this.tickPause();
 						mainW.getPlayingPanel().createRollingButton();
+					} else if(tick>=110) { //fate
+						Cell steppedCell = currentPlayer.getCurrentCell();
+						this.setGameState(GameState.FATE, steppedCell.getScore());
 					}
 				}
+				break;
+			case FATE:
+				FatePanel fatePanel = mainW.getFatePanel();
+				fatePanel.doTick();
+				fatePanel.repaint();
 				break;
 			default:
 				break;
@@ -289,13 +327,20 @@ public class NckuMonopoly {
 	
 	//get-set
 	public void setGameState(GameState gamestate) {
+		this.setGameState(gamestate, 0);
+	}
+	public void setGameState(GameState gamestate, int fateType) {
 		//debug
 		System.out.println("Gamestate changed: "
 						+ Game.gamestate.toString()
 						+ " to " +
 						gamestate.toString());
 		//main window
-		mainW.changePanel(gamestate);
+		try {
+			mainW.changePanel(gamestate, fateType);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		Game.gamestate = gamestate;
 	}
 	//var

@@ -6,5 +6,6 @@ public enum GameState {
 	ROLLING,
 	MOVING,
 	EVENT,
+	FATE,
 	END
 }

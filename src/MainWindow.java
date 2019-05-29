@@ -23,22 +23,49 @@ public class MainWindow extends JFrame {
 		//show
 		this.setVisible(true);
 	}
-	//get-set
 	//method
-	public void changePanel(GameState newGamestate) {
+	public void changePanel(GameState newGamestate, int fateType) throws Exception {
 		Dimension dim = this.getSize();
 		//panel
 		if(newGamestate == GameState.START) {
 			if(Game.gamestate != GameState.START) {
 				if(this.playingPanel != null) this.remove(this.playingPanel);
 				this.playingPanel = null;
+				if(this.fatePanel != null) this.remove(this.fatePanel);
+				this.fatePanel = null;
 				this.startPanel = new StartPanel(dim);
 				this.add(this.startPanel);
 			}
-		} else {
-			if(Game.gamestate == GameState.START || Game.gamestate == GameState.INIT) {
+		} else if(newGamestate == GameState.FATE) {
+			if(Game.gamestate != GameState.FATE) {
+				if(this.playingPanel != null) this.remove(this.playingPanel);
+				this.playingPanel = null;
 				if(this.startPanel != null) this.remove(this.startPanel);
 				this.startPanel = null;
+				switch(fateType) {
+				case 1:
+					this.fatePanel = new FatePanel1(dim);
+					break;
+				case 2:
+					this.fatePanel = new FatePanel2(dim);
+					break;
+				case 3:
+					this.fatePanel = new FatePanel3(dim);
+					break;
+				default:
+					throw new Exception("Fate type must be provided:\n"
+							+ "1: find rabbit\n"
+							+ "2: knowledge championship\n"
+							+ "3: get hearts\n");
+				}
+				this.add(this.fatePanel);
+			}
+		} else {
+			if(Game.gamestate == GameState.START || Game.gamestate == GameState.INIT || Game.gamestate == GameState.FATE) {
+				if(this.startPanel != null) this.remove(this.startPanel);
+				this.startPanel = null;
+				if(this.fatePanel != null) this.remove(this.fatePanel);
+				this.fatePanel = null;
 				this.playingPanel = new PlayingPanel(dim);
 				this.add(this.playingPanel);
 			}
@@ -48,7 +75,11 @@ public class MainWindow extends JFrame {
 	public PlayingPanel getPlayingPanel() {
 		return playingPanel;
 	}
+	public FatePanel getFatePanel() {
+		return fatePanel;
+	}
 	//var
 	private StartPanel startPanel;
 	private PlayingPanel playingPanel;
+	private FatePanel fatePanel;
 }
