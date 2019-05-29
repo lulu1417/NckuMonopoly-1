@@ -55,9 +55,11 @@ public class PlayingPanel extends MainPanel{
 		this.cellNameBg = new GraphicImgItem(x, y, 164, 40, "/cellNameBg.png", Game.graphicItems);
 		this.cellNameBg.setZ(1000);
 		this.cellNameBg.setLifeTime(1);
+		this.cellNameBg.setOpacity(0.8);
 		this.cellName = new GraphicTextItem(x, y, 25, cellName, Game.graphicItems);
 		this.cellName.setZ(1000);
 		this.cellName.setLifeTime(1);
+		this.cellName.setOpacity(0.8);
 	}
 	public void showEventName(String eventName, int x, int y, int lifetime) {
 		if(this.eventName != null) this.eventName.kill();

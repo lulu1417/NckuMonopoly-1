@@ -35,7 +35,7 @@ public class GraphicTextItem extends GraphicItem{
 		g.drawString(text, this.drawX(sc), this.drawY(sc));
 	}
 	protected int drawW(double sc) {
-		return (int) (text.length()*fontSize*sc);
+		return (int) (text.length()* fontSize *sc);
 	}
 	protected int drawX(double sc) {
 		return (int) (pos.getX() * sc - drawW(sc) * 0.5);

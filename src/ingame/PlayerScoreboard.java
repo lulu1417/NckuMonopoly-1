@@ -34,7 +34,6 @@ public class PlayerScoreboard extends GraphicImgItem{
 			this.text[i] = new GraphicTextItem(x+65, y+30+37*i, fontSize, title, itemList);
 			this.num[i] = new GraphicTextItem(x+155, y+30+37*i, fontSize, Integer.toString(number), itemList);
 		}
-		this.additions = new GraphicTextItem[3];
 		for(int i=0; i<this.additions.length; ++i) this.additions[i] = null;
 	}
 	//method
@@ -61,7 +60,7 @@ public class PlayerScoreboard extends GraphicImgItem{
 		//addition number
 		if(this.additions[type] != null) this.additions[type].kill();
 		this.additions[type] = new GraphicTextItem(x, y, fontSize, message, Game.graphicItems);
-		this.additions[type].setLifeTime(60);
+		this.additions[type].setLifeTime(90);
 		this.additions[type].setColor(color);
 	}
 	public void showLessonAddition(int add) {

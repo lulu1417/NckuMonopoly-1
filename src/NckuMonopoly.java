@@ -135,7 +135,7 @@ public class NckuMonopoly {
 						Cell steppedCell = currentPlayer.getCurrentCell();
 						switch(steppedCell.getCellType()) {
 							case NOTHING: //no event
-								mainW.getPlayingPanel().showEventName("這裡什麼都沒有...", (Game.Width-250)/2+250-50, Game.Height/2-100, 50);
+								mainW.getPlayingPanel().showEventName("　　　這裡什麼都沒有...", (Game.Width-250)/2+250-50, Game.Height/2-100, 90);
 								tickStart(21);
 								break;
 							case SELECT: //select event
@@ -166,12 +166,50 @@ public class NckuMonopoly {
 								mainW.getPlayingPanel().createSelections(steppedCell.getMessage(),selections[0],selections[1],selections[2]);
 								break;
 							case START: //start event
-								mainW.getPlayingPanel().showEventName("回到起點，獲得一百元", (Game.Width-250)/2+250-50, Game.Height/2-100, 50);
+								mainW.getPlayingPanel().showEventName("回到起點，獲得一百元", (Game.Width-250)/2+250-50, Game.Height/2-100, 90);
 								currentPlayer.addMoney(100);
 								tickStart(21);
 								break;
-							default: //chance event, fate event
-								mainW.getPlayingPanel().showEventName("此格尚未完成", (Game.Width-250)/2+250-50, Game.Height/2-100, 50);
+							case CHANCE: //chance
+								int chanceCount = 5;
+								Random rng = new Random();
+								int chanceNum = rng.nextInt(chanceCount);
+								switch (chanceNum) {
+								case 0: {
+									mainW.getPlayingPanel().showEventName("　　Java翹課，課業減半", (Game.Width-250)/2+250-50, Game.Height/2-100, 90);
+									currentPlayer.addLesson(-currentPlayer.getLesson()/2);
+									tickStart(21);
+								} break;
+								case 1: {
+									mainW.getPlayingPanel().showEventName("　　對中發票，獲得200元", (Game.Width-250)/2+250-50, Game.Height/2-100, 90);
+									currentPlayer.addMoney(200);
+									tickStart(21);
+								} break;
+								case 2: {
+									mainW.getPlayingPanel().showEventName("　撿到50元", (Game.Width-250)/2+250-50, Game.Height/2-100, 90);
+									currentPlayer.addMoney(50);
+									tickStart(21);
+								} break;
+								case 3: {
+									String chanceSelections[] = {"課業","社團","愛情"};
+									int chanceScore = -10;
+									this.steppedScore = chanceScore;
+									for(int i=0;i<chanceSelections.length;++i)
+										if(!chanceSelections[i].equals(""))
+											chanceSelections[i] = chanceSelections[i] + chanceScore;
+									mainW.getPlayingPanel().createSelections("衣服穿反",chanceSelections[0],chanceSelections[1],chanceSelections[2]);
+								} break;
+								case 4: {
+									mainW.getPlayingPanel().showEventName("　　考上研究所，學業+50", (Game.Width-250)/2+250-50, Game.Height/2-100, 90);
+									currentPlayer.addLesson(50);
+									tickStart(21);
+								} break;
+								default:
+									break;
+								}
+								break;
+							default: //fate event, shop event
+								mainW.getPlayingPanel().showEventName("此格尚未完成", (Game.Width-250)/2+250-50, Game.Height/2-100, 90);
 								tickStart(21);
 								break;
 						}
@@ -188,14 +226,14 @@ public class NckuMonopoly {
 			default:
 				break;
 			}
-			
+
 			//dead
 			Iterator<GraphicItem> it = Game.graphicItems.iterator();
 			while (it.hasNext()) {
 			    GraphicItem graphicItem = it.next();
-			    if (graphicItem.isDead()) it.remove();
+			    if(graphicItem.isDead()) it.remove();
 			}
-
+			
 			//repaint
 			mainW.repaint();
 			
@@ -216,7 +254,7 @@ public class NckuMonopoly {
 		//players
 		for(int i=0; i<Game.playerCount; ++i) {
 			String playerImg = "/player" + (i+1) + ".png";
-			Player player = new Player(77, 120, playerImg, 100, 100, 100, 100, 0, i, Game.graphicItems);
+			Player player = new Player(77, 120, playerImg, 100, 100, 100, 50, 0, i, Game.graphicItems);
 			player.createScoreBoard(20, 50+i*200, "/scoreboard"+ (i+1) +".png", Game.graphicItems);
 			if(i==0) this.currentPlayer = player;
 			Game.players.add(player);
