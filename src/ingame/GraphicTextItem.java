@@ -21,6 +21,7 @@ public class GraphicTextItem extends GraphicItem{
 		this.text = text;
 		this.fontSize = fontSize;
 		this.color = Color.BLACK;
+		this.centered = true;
 		itemList.add(this);
 	}
 	
@@ -38,7 +39,8 @@ public class GraphicTextItem extends GraphicItem{
 		return (int) (text.length()* fontSize *sc);
 	}
 	protected int drawX(double sc) {
-		return (int) (pos.getX() * sc - drawW(sc) * 0.5);
+		if(this.centered) return (int) (pos.getX() * sc - drawW(sc) * 0.5);
+		return (int) (pos.getX() * sc);
 	}
 	protected int drawY(double sc) {
 		return (int) (pos.getY() * sc + fontSize * sc * 0.4);
@@ -47,6 +49,9 @@ public class GraphicTextItem extends GraphicItem{
 	//get-set
 	public void setPosition(Point pos) {
 		this.pos.setLocation(pos);
+	}
+	public void setCentered(boolean centered) {
+		this.centered = centered;
 	}
 	public void setText(String text) {
 		this.text = text;
@@ -59,4 +64,5 @@ public class GraphicTextItem extends GraphicItem{
 	protected int fontSize;
 	protected String text;
 	protected Color color;
+	protected boolean centered;
 }
