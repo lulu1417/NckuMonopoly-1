@@ -59,6 +59,12 @@ public class GraphicTextItem extends GraphicItem{
 	public void setColor(Color color) {
 		this.color = color;
 	}
+	public double getX() {
+		return this.pos.getX();
+	}
+	public double getY() {
+		return this.pos.getY();
+	}
 	//var
 	protected Point pos;
 	protected int fontSize;

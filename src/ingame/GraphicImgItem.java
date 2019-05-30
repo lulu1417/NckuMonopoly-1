@@ -48,14 +48,32 @@ public class GraphicImgItem extends GraphicItem {
 	}
 	
 	//get-set
+	public void setImage(String img_path) {
+		try {
+			URL url = this.getClass().getResource(img_path);
+	        this.img = ImageIO.read(url);
+	    }
+	    catch (Exception ex) {
+	        System.out.println("This image file doesn't exist: "+img_path);
+	    }
+	}
 	public void setPosition(Point pos) {
 		this.rect.setLocation(pos);
+	}
+	public void setSize(int w, int h) {
+		this.rect.setSize(w, h);
 	}
 	public double getX() {
 		return this.rect.getX();
 	}
 	public double getY() {
 		return this.rect.getY();
+	}
+	public double getW() {
+		return this.rect.getWidth();
+	}
+	public double getH() {
+		return this.rect.getHeight();
 	}
 	
 	//var

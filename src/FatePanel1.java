@@ -1,5 +1,7 @@
 import java.awt.Dimension;
 
+import ingame.GraphicImgItem;
+
 public class FatePanel1 extends FatePanel{
 	//ctor
 	public FatePanel1(Dimension dim) {

@@ -5,6 +5,8 @@ import java.awt.Graphics2D;
 import java.awt.MouseInfo;
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 
 import ingame.Game;
@@ -19,7 +21,18 @@ public class FatePanel extends MainPanel{
 	}
 	public void paint(Graphics g) {
 		double sc = (double)this.getWidth() / Game.Width;
+		//sort
+		Collections.sort(this.graphicItems, new Comparator<GraphicItem>() {
+			public int compare(GraphicItem a, GraphicItem b) 
+			{
+				if(a.getZ() > b.getZ()) return 1;
+				if(a.getZ() == b.getZ()) return 0;
+				return -1;
+			}
+		});
+		//draw
 		for(GraphicItem graphicItem: this.graphicItems) graphicItem.draw(g,sc);
+		//draw component
 		Graphics2D g2 = (Graphics2D)g;
 		AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) 1.0);
 		g2.setComposite(ac);
