@@ -4,6 +4,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.MouseInfo;
 import java.awt.Point;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -18,6 +20,32 @@ public class FatePanel extends MainPanel{
 		super(dim);
 		this.type = type;
 		this.graphicItems = new ArrayList<GraphicItem>();
+		this.leftPressed = false;
+		this.middlePressed = false;
+		this.rightPressed = false;
+		FatePanel self = this;
+		this.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				if (e.getButton() == MouseEvent.BUTTON1) {
+					self.leftPressed = true;
+				} else if (e.getButton() == MouseEvent.BUTTON2) {
+					self.middlePressed = true;
+				} else if (e.getButton() == MouseEvent.BUTTON3) {
+					self.rightPressed = true;
+				}
+			}
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				if (e.getButton() == MouseEvent.BUTTON1) {
+					self.leftPressed = false;
+				} else if (e.getButton() == MouseEvent.BUTTON2) {
+					self.middlePressed = false;
+				} else if (e.getButton() == MouseEvent.BUTTON3) {
+					self.rightPressed = false;
+				}
+			}
+		});
 	}
 	public void paint(Graphics g) {
 		double sc = (double)this.getWidth() / Game.Width;
@@ -47,7 +75,7 @@ public class FatePanel extends MainPanel{
 		    GraphicItem graphicItem = it.next();
 		    if(graphicItem.isDead()) it.remove();
 		}
-	};
+	}
 	protected void gameEnd(int point) {
 		Game.signals.add("Fate ended: "+ this.type + " " + point);
 	}
@@ -60,6 +88,16 @@ public class FatePanel extends MainPanel{
 				);
 		return mouse_pos;
 	}
+	protected boolean getLeftPressed() {
+		return this.leftPressed;
+	}
+	protected boolean getMiddlePressed() {
+		return this.middlePressed;
+	}
+	protected boolean getRightPressed() {
+		return this.rightPressed;
+	}
 	protected int type;
 	protected ArrayList<GraphicItem> graphicItems;
+	private boolean leftPressed, middlePressed, rightPressed;
 }
