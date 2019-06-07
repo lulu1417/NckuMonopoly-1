@@ -28,6 +28,9 @@ public class NckuMonopoly {
 		mainW = new MainWindow();
 		this.setGameState(GameState.START);
 		this.steppedScore = 0;
+		this.start();
+		this.setGameState(GameState.FATE, 2);
+
 		//thread
 		while(true) {
 
