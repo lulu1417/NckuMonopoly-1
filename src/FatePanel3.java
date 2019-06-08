@@ -1,3 +1,4 @@
+//author: 邱顯倫
 import java.awt.Dimension;
 
 public class FatePanel3 extends FatePanel{

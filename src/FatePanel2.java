@@ -1,10 +1,9 @@
+//author: 方柏翔
 import java.awt.Dimension;
 import java.awt.Point;
 import java.util.concurrent.ThreadLocalRandom;
 
-import ingame.Game;
 import ingame.GraphicImgItem;
-import ingame.GraphicTextItem;
 
 public class FatePanel2 extends FatePanel{
 	//ctor

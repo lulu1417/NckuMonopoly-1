@@ -1,14 +1,9 @@
-import java.awt.MouseInfo;
 import java.awt.Point;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Random;
 import java.util.Scanner;
 
 import ingame.Cell;
-import ingame.CellType;
 import ingame.Game;
 import ingame.GameState;
 import ingame.GraphicImgItem;

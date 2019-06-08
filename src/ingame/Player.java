@@ -1,13 +1,7 @@
 package ingame;
 
-import java.awt.Graphics;
-import java.awt.Panel;
 import java.awt.Point;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-
-import javax.swing.JPanel;
 
 public class Player extends GraphicImgItem {
 	//ctor
