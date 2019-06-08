@@ -4,8 +4,14 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.MouseInfo;
 import java.awt.Point;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.net.URL;
 import java.util.Collections;
 import java.util.Comparator;
+
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 
 import ingame.Cell;
 import ingame.Game;
@@ -18,6 +24,7 @@ public class PlayingPanel extends MainPanel{
 	public PlayingPanel(Dimension dim) {
 		super(dim);
 		this.selections = new ClickButton[3];
+		this.dieSelections = new ClickButton[6];
 		this.mouse_pos = new Point(0,0);
 	}
 	//method
@@ -70,6 +77,33 @@ public class PlayingPanel extends MainPanel{
 		this.remove(rollingButton);
 		this.rollingButton = null;
 	}
+	public void createDieSelections(String eventName) {
+		int w = 100, h = 100;
+		double sc = (double)this.getWidth() / Game.Width;
+		this.showEventName(eventName, (Game.Width-250)/2+250-50,(int) (Game.Height/2-2*(h+25)+10+(0.5*h)), -1);
+		for(int i=0; i<6; ++i) {
+			String signal;
+			signal = "Select die point: " + (i+1);
+			try {
+				URL url = this.getClass().getResource("/die"+ (i+1) +".png");
+				ImageIcon img = new ImageIcon(ImageIO.read(url));
+				this.dieSelections[i] = new ClickButton((int) ((Game.Width-250)/2+250 + (i/3-0.5)*120), Game.Height/2+(i%3-1)*(h+25)+50, w, h, sc, img, signal);
+				this.add(dieSelections[i]);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	public void deleteDieSelections() {
+		for(int i=0; i<6; ++i) {
+			if(dieSelections[i] == null) continue;
+			this.remove(dieSelections[i]);
+			dieSelections[i] = null;
+		}
+		if(eventName == null) return;
+		eventName.kill();
+		eventName = null;
+	}
 	public void createSelections(String eventName, String selection1, String selection2, String selection3) {
 		int w = 500, h = 100;
 		double sc = (double)this.getWidth() / Game.Width;
@@ -79,15 +113,15 @@ public class PlayingPanel extends MainPanel{
 			switch (i) {
 			case 0:
 				text = selection1;
-				signal = "Select lesson";
+				signal = "Select score: lesson";
 				break;
 			case 1:
 				text = selection2;
-				signal = "Select club";
+				signal = "Select score: club";
 				break;
 			default:
 				text = selection3;
-				signal = "Select love";
+				signal = "Select score: love";
 				break;
 			}
 			if(text.equals("")) {
@@ -116,5 +150,6 @@ public class PlayingPanel extends MainPanel{
 	private GraphicItem cellNameBg, eventName, cellName;
 	private ClickButton rollingButton;
 	private ClickButton[] selections;
+	private ClickButton[] dieSelections;
 	private Point mouse_pos;
 }

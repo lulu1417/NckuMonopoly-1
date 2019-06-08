@@ -26,12 +26,12 @@ public class Player extends GraphicImgItem {
 	protected int drawY(double sc) {
 		return (int) (rect.getY() * sc - drawH(sc) * 0.9);
 	}
-	public void moveTo(int cell) throws Exception {
-		if(cell >= Game.cells.length) throw new Exception("This cell is not exist!");
+	public void moveTo(int cell) {
+		int valid_cell = cell % Game.cells.length;
 		int oldCell = this.currentCell;
-		this.currentCell = cell;
+		this.currentCell = valid_cell;
 		repositionPlayers(oldCell);
-		repositionPlayers(cell);
+		repositionPlayers(valid_cell);
 	}
 	public static void repositionPlayers(int cell) {
 		//players in the same cell
@@ -55,12 +55,7 @@ public class Player extends GraphicImgItem {
 	}
 	public void moveToNext() {
 		int nextCell = this.currentCell+1;
-		try {
-			if(nextCell >= Game.cells.length) this.moveTo(0);
-			else this.moveTo(nextCell);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		this.moveTo(nextCell);
 	}
 	public void createScoreBoard(int x, int y, String img_path, ArrayList<GraphicItem> itemList) {
 		this.scoreboard = new PlayerScoreboard(x, y, img_path, this.lesson, this.club, this.love, this.money, itemList);
@@ -116,6 +111,9 @@ public class Player extends GraphicImgItem {
 	}
 	public Cell getCurrentCell() {
 		return Game.cells[this.currentCell];
+	}
+	public int getCurrentCellID() {
+		return this.currentCell;
 	}
 	public int getID() {
 		return this.id;

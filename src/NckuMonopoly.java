@@ -28,6 +28,7 @@ public class NckuMonopoly {
 		mainW = new MainWindow();
 		this.setGameState(GameState.START);
 		this.steppedScore = 0;
+		this.nextMoveNoEvent = false;
 
 		//thread
 		while(true) {
@@ -49,7 +50,7 @@ public class NckuMonopoly {
 					}
 					break;
 				case EVENT:
-					if(signal.startsWith("Button clicked: Select")) {
+					if(signal.startsWith("Button clicked: Select score:")) {
 						mainW.getPlayingPanel().deleteSelections();
 						Random rng = new Random();
 						if(signal.endsWith("lesson")) {
@@ -60,6 +61,12 @@ public class NckuMonopoly {
 							currentPlayer.addLove(this.steppedScore);
 						}
 						this.tickStart(21);
+					} else if(signal.startsWith("Button clicked: Select die point:")) {
+						mainW.getPlayingPanel().deleteDieSelections();
+						String diePointStr = signal.substring("Button clicked: Select die point: ".length());
+						int fateDiePoint = Integer.valueOf(diePointStr);
+						this.rollingNum = fateDiePoint;
+						this.tickStart(111);
 					}
 					break;
 				case FATE:
@@ -156,6 +163,10 @@ public class NckuMonopoly {
 				}
 				break;
 			case EVENT:
+				if(this.nextMoveNoEvent) { //event won't be triggered in this move
+					this.nextMoveNoEvent = false;
+					tickStart(21);
+				}
 				if(ticking) {
 					if(++tick==20) {
 						tickPause();
@@ -198,7 +209,7 @@ public class NckuMonopoly {
 								tickStart(21);
 								break;
 							case CHANCE: //chance
-								int chanceCount = 5;
+								int chanceCount = 6;
 								Random rng = new Random();
 								int chanceNum = rng.nextInt(chanceCount);
 								switch (chanceNum) {
@@ -231,6 +242,9 @@ public class NckuMonopoly {
 									currentPlayer.addLesson(50);
 									tickStart(21);
 								} break;
+								case 5: {
+									mainW.getPlayingPanel().createDieSelections("　　搭乘台南Uber，自由選擇步數前進");
+								} break;
 								default:
 									break;
 								}
@@ -251,9 +265,22 @@ public class NckuMonopoly {
 						this.setGameState(GameState.ROLLING);
 						this.tickPause();
 						mainW.getPlayingPanel().createRollingButton();
-					} else if(tick>=110) { //fate
+					} else if(tick==110) { //fate
 						Cell steppedCell = currentPlayer.getCurrentCell();
 						this.setGameState(GameState.FATE, steppedCell.getScore());
+					} else if(tick==112) { //chance: choose die
+						//die img
+						String dieImg = "/die" + this.rollingNum + ".png";
+						GraphicItem die = new GraphicImgItem((Game.Width-250)/2+250, Game.Height/2, 100, 100, dieImg, Game.graphicItems);
+						die.setLifeTime(50);
+						//die number hint
+						String hintString = "選擇點數：" + this.rollingNum;
+						GraphicItem hint = new GraphicTextItem((Game.Width-250)/2+250, Game.Height/2-80, 30, hintString, Game.graphicItems);
+						hint.setLifeTime(50);
+						//change state
+						this.nextMoveNoEvent = true;
+						this.setGameState(GameState.MOVING);
+						this.tickStart(-30);
 					}
 				}
 				break;
@@ -347,7 +374,7 @@ public class NckuMonopoly {
 	//var
 	private MainWindow mainW;
 	private long tick;
-	private boolean ticking;
+	private boolean ticking, nextMoveNoEvent;
 	private Player currentPlayer;
 	private int rollingNum, steppedScore;
 }
