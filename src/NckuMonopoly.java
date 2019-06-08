@@ -156,7 +156,7 @@ public class NckuMonopoly {
 			case MOVING:
 				if(ticking) {
 					if(++tick>=20) {
-						this.currentPlayer.moveToNext();
+						if(this.rollingNum>0) this.currentPlayer.moveToNext();
 						if(--this.rollingNum<=0) this.setGameState(GameState.EVENT);
 						this.tickStart();
 					}
@@ -209,7 +209,7 @@ public class NckuMonopoly {
 								tickStart(21);
 								break;
 							case CHANCE: //chance
-								int chanceCount = 6;
+								int chanceCount = 7;
 								Random rng = new Random();
 								int chanceNum = rng.nextInt(chanceCount);
 								switch (chanceNum) {
@@ -245,6 +245,10 @@ public class NckuMonopoly {
 								case 5: {
 									mainW.getPlayingPanel().createDieSelections("　　搭乘台南Uber，自由選擇步數前進");
 								} break;
+								case 6: {
+									mainW.getPlayingPanel().showEventName("沒注意行人號誌，發生車禍", (Game.Width-250)/2+250-50, Game.Height/2-100, 90);
+									tickStart(131);
+								} break;
 								default:
 									break;
 								}
@@ -254,7 +258,7 @@ public class NckuMonopoly {
 								tickStart(51);
 								break;
 							default: //shop event
-								mainW.getPlayingPanel().showEventName("此格尚未完成", (Game.Width-250)/2+250-50, Game.Height/2-100, 90);
+								mainW.getPlayingPanel().showEventName("掛急診住院", (Game.Width-250)/2+250-50, Game.Height/2-100, 90);
 								tickStart(21);
 								break;
 						}
@@ -279,6 +283,11 @@ public class NckuMonopoly {
 						hint.setLifeTime(50);
 						//change state
 						this.nextMoveNoEvent = true;
+						this.setGameState(GameState.MOVING);
+						this.tickStart(-30);
+					} else if(tick==160) { //fate
+						currentPlayer.moveTo(21);
+						this.rollingNum = 0;
 						this.setGameState(GameState.MOVING);
 						this.tickStart(-30);
 					}
