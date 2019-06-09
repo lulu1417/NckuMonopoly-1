@@ -14,6 +14,9 @@ public class Player extends GraphicImgItem {
 		this.id = id;
 		this.scoreboard = null;
 		this.currentCell = currentCell;
+		this.selectedHint = null;
+		this.freezeCount = 0;
+		this.eliminated = false;
 	}
 	//method
 	@Override
@@ -33,7 +36,15 @@ public class Player extends GraphicImgItem {
 		for(Player player: Game.players) if(player.currentCell == cell) playersInCell.add(player);
 		//position
 		if(playersInCell.size() == 1) { //one player
-			playersInCell.get(0).setPosition(Game.cells[cell]);
+			Player player = playersInCell.get(0);
+			player.setPosition(Game.cells[cell]);
+			//arrow
+			if(player.selectedHint != null) {
+				Point arrow_pos = new Point(
+						(int) (player.getX()),
+						(int) (player.getY()-150));
+				player.selectedHint.setPosition(arrow_pos);
+			}
 		} else { // two or more
 			double angle = -Math.PI/8;
 			for(Player player: playersInCell) {
@@ -43,6 +54,13 @@ public class Player extends GraphicImgItem {
 						(int) (bias_w*Math.cos(angle) + aim.getX()),
 						(int) (30*Math.sin(angle) + aim.getY()));
 				player.setPosition(biased);
+				//arrow
+				if(player.selectedHint != null) {
+					Point arrow_pos = new Point(
+							(int) (biased.getX()),
+							(int) (biased.getY()-150));
+					player.selectedHint.setPosition(arrow_pos);
+				}
 				angle += 2*Math.PI/playersInCell.size();
 			}
 		}
@@ -74,7 +92,19 @@ public class Player extends GraphicImgItem {
 		this.scoreboard.setMoney(this.money);
 		this.scoreboard.showMoneyAddition(add);
 	}
+	public int checkFreeze() {
+		if(this.freezeCount==0) return 0;
+		return this.freezeCount--;
+	}
 	//get-set
+	public void setEliminated(boolean eliminated) {
+		this.eliminated = eliminated;
+		this.setOpacity(0.0);
+		this.scoreboard.setEliminated(eliminated);
+	}
+	public void setFreezeCount(int freezeCount) {
+		this.freezeCount = freezeCount;
+	}
 	public void setLesson(int lesson) {
 		this.lesson = lesson;
 		this.scoreboard.setLesson(lesson);
@@ -90,6 +120,9 @@ public class Player extends GraphicImgItem {
 	public void setMoney(int money) {
 		this.money = money;
 		this.scoreboard.setMoney(money);
+	}
+	public boolean getEliminated() {
+		return this.eliminated;
 	}
 	public int getLesson() {
 		return this.lesson;
@@ -115,10 +148,22 @@ public class Player extends GraphicImgItem {
 	public void select() {
 		this.setOpacity(1.0);
 		this.scoreboard.select();
+		if(this.selectedHint != null) {
+			this.selectedHint.kill();
+			this.selectedHint = null;
+		}
+		this.selectedHint = new GraphicImgItem((int) this.getX(), (int) this.getY()-150, 50, 50, "/arrow.png", Game.graphicItems);
+		this.selectedHint.setZ(10000);
+		this.selectedHint.setFloating(true, 15);
 	}
 	public void unselect() {
-		this.setOpacity(0.5);
+		if(this.eliminated) this.setOpacity(0.0);
+		else this.setOpacity(0.5);
 		this.scoreboard.unselect();
+		if(this.selectedHint != null) {
+			this.selectedHint.kill();
+			this.selectedHint = null;
+		}
 	}
 	//player with more y should be paint more later
 	@Override
@@ -126,7 +171,10 @@ public class Player extends GraphicImgItem {
 		return this.getY();
 	}
 	//var
+	private GraphicImgItem selectedHint;
 	private int currentCell, id;
 	private int lesson, club, love, money;
 	private PlayerScoreboard scoreboard;
+	private int freezeCount;
+	private boolean eliminated;
 }

@@ -105,7 +105,7 @@ public class PlayingPanel extends MainPanel{
 	public void createSelections(String eventName, String selection1, String selection2, String selection3) {
 		int w = 500, h = 100;
 		double sc = (double)this.getWidth() / Game.Width;
-		this.showEventName(eventName, (Game.Width-250)/2+250-50,(int) (Game.Height/2-2*(h+25)+10+(0.5*h)), -1);
+		this.showEventName(eventName, (Game.Width-250)/2+250-50,(int) (Game.Height/2-2*h-10+(0.5*h)), -1);
 		for(int i=0; i<3; ++i) {
 			String text, signal;
 			switch (i) {
@@ -126,7 +126,7 @@ public class PlayingPanel extends MainPanel{
 				if(this.selections[i] != null) this.selections[i] = null;
 				continue;
 			}
-			this.selections[i] = new ClickButton((Game.Width-250)/2+250, Game.Height/2+(i-1)*(h+25)+50, w, h, sc, text, signal);
+			this.selections[i] = new ClickButton((Game.Width-250)/2+250, Game.Height/2+(i-1)*h+30, w, h, sc, text, signal);
 			this.add(selections[i]);
 		}
 	}

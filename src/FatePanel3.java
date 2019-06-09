@@ -7,6 +7,7 @@ public class FatePanel3 extends FatePanel{
 		super(dim, 3);
 		//game start
 		//...
+		this.gameEnd(100);
 	}
 	//method
 	@Override

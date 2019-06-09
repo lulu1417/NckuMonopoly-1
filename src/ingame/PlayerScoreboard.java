@@ -11,6 +11,8 @@ public class PlayerScoreboard extends GraphicImgItem{
 		this.text = new GraphicTextItem[4];
 		this.num = new GraphicTextItem[4];
 		this.additions = new GraphicTextItem[4];
+		this.eliminated = false;
+		this.cross = null;
 		for(int i=0; i<4; ++i) {
 			int number;
 			String title;
@@ -76,6 +78,14 @@ public class PlayerScoreboard extends GraphicImgItem{
 		this.showAddition(3, add);
 	}
 	//get-set
+	public void setEliminated(boolean eliminated) {
+		if((!this.eliminated && eliminated) || (this.eliminated && !eliminated)) {
+			if(this.cross != null) this.cross.kill();
+			if(eliminated) this.cross = new GraphicImgItem((int) (this.getX() + this.getW()/2), (int) (this.getY() + this.getH()/2), (int) this.getW(), (int) this.getH(), "/cross.png", Game.graphicItems);
+			else this.cross = null;
+		}
+		this.eliminated = eliminated;
+	}
 	public void setLesson(int lesson) {
 		this.num[0].setText(Integer.toString(lesson));
 	}
@@ -107,4 +117,6 @@ public class PlayerScoreboard extends GraphicImgItem{
 	private GraphicTextItem[] num;
 	private GraphicTextItem[] additions;
 	public static final int fontSize = 30;
+	private boolean eliminated;
+	private GraphicImgItem cross;
 }

@@ -70,19 +70,25 @@ public class NckuMonopoly {
 						String fateIdentifier = scanner.next() + " " + scanner.next();
 						if(fateIdentifier.equals("Fate ended:")) {
 							int fateType = scanner.nextInt();
+							String fateTypeStr;
 							int fatePoint = scanner.nextInt();
 							switch (fateType) {
 							case 1:
 								currentPlayer.addLesson(fatePoint);
+								fateTypeStr = "課業";
 								break;
 							case 2:
 								currentPlayer.addClub(fatePoint);
+								fateTypeStr = "社團";
 								break;
 							default:
 								currentPlayer.addLove(fatePoint);
+								fateTypeStr = "愛情";
 								break;
 							}
+							String str = "　　小遊戲結束，獲得" + fateTypeStr + "分數" + fatePoint + "分";
 							this.setGameState(GameState.EVENT);
+							mainW.getPlayingPanel().showEventName(str, (Game.Width-250)/2+250-50, Game.Height/2-100, 60);
 							this.tickStart(21);
 						}
 					} catch (Exception e) {
@@ -108,10 +114,6 @@ public class NckuMonopoly {
 			//tick execution
 			switch (Game.gamestate) {
 			case ROLLING:
-				for(Player player: Game.players) {
-					if(player == currentPlayer) player.select();
-					else player.unselect();
-				}
 				if(ticking) {
 					++tick;
 					final int times = 26;
@@ -252,18 +254,48 @@ public class NckuMonopoly {
 								mainW.getPlayingPanel().showEventName("命運：" + steppedCell.getMessage(), (Game.Width-250)/2+250-50, Game.Height/2-100, 60);
 								tickStart(51);
 								break;
+							case HOSPITAL: //hospital event
+								mainW.getPlayingPanel().showEventName(steppedCell.getMessage(), (Game.Width-250)/2+250-50, Game.Height/2-100, 60);
+								currentPlayer.setFreezeCount(2);
+								tickStart(21);
+								break;
 							default: //shop event
-								mainW.getPlayingPanel().showEventName("掛急診住院", (Game.Width-250)/2+250-50, Game.Height/2-100, 90);
+								mainW.getPlayingPanel().showEventName("", (Game.Width-250)/2+250-50, Game.Height/2-100, 90);
 								tickStart(21);
 								break;
 						}
-					} else if(tick==50) { //next player's rolling state
+					} else if(tick==50) { //normal end phase
+						//lose check
+						if(currentPlayer.getLesson()<=0) {
+							mainW.getPlayingPanel().showEventName("課業歸零，二一出局", (Game.Width-250)/2+250-50, Game.Height/2-100, 90);
+							currentPlayer.setEliminated(true);
+						}
+						//next player's rolling state
 						int id = this.currentPlayer.getID();
-						if(++id>=Game.playerCount) id=0;
-						this.currentPlayer = Game.players.get(id);
-						this.setGameState(GameState.ROLLING);
-						this.tickPause();
-						mainW.getPlayingPanel().createRollingButton();
+						for(int i=0; i<Game.playerCount; ++i) {
+							if(++id>=Game.playerCount) id=0;
+							this.currentPlayer = Game.players.get(id);
+							if(!currentPlayer.getEliminated()) break;
+							if(i==Game.playerCount-1) { //all players are eliminated
+								mainW.getPlayingPanel().showEventName("全體二一", (Game.Width-250)/2+250-50, Game.Height/2-100, 90);
+								tickStart(-10000);
+								tickPause();
+							}
+						}
+						for(Player player: Game.players) {
+							if(player == currentPlayer) player.select();
+							else player.unselect();
+						}
+						int freezeCount = currentPlayer.checkFreeze();
+						if(freezeCount>0) { //next player is being frozen
+							this.nextMoveNoEvent = true;
+							String showStr = "此玩家被暫停，剩餘" + (freezeCount-1) + "回合";
+							mainW.getPlayingPanel().showEventName(showStr, (Game.Width-250)/2+250-50, Game.Height/2-100, 90);
+						} else {
+							this.setGameState(GameState.ROLLING);
+							this.tickPause();
+							mainW.getPlayingPanel().createRollingButton();
+						}
 					} else if(tick==110) { //fate
 						Cell steppedCell = currentPlayer.getCurrentCell();
 						this.setGameState(GameState.FATE, steppedCell.getScore());
@@ -280,7 +312,7 @@ public class NckuMonopoly {
 						this.nextMoveNoEvent = true;
 						this.setGameState(GameState.MOVING);
 						this.tickStart(-30);
-					} else if(tick==160) { //fate
+					} else if(tick==160) { //chance: hospitalized
 						currentPlayer.moveTo(21);
 						this.rollingNum = 0;
 						this.setGameState(GameState.MOVING);
@@ -335,6 +367,10 @@ public class NckuMonopoly {
 					e.printStackTrace();
 				}
 			}
+		}
+		for(Player player: Game.players) {
+			if(player == currentPlayer) player.select();
+			else player.unselect();
 		}
 		//roll button
 		mainW.getPlayingPanel().createRollingButton();

@@ -23,7 +23,7 @@ public class GraphicImgItem extends GraphicItem {
 	        System.out.println("This image file doesn't exist: "+img_path);
 	    }
 		this.rect = new Rectangle(x, y, w, h);
-		itemList.add(this);
+		if(itemList != null) itemList.add(this);
 	}
 	
 	//method
@@ -44,7 +44,7 @@ public class GraphicImgItem extends GraphicItem {
 		return (int) (rect.getX() * sc - drawW(sc) * 0.5);
 	}
 	protected int drawY(double sc) {
-		return (int) (rect.getY() * sc - drawH(sc) * 0.5);
+		return (int) ((rect.getY() + this.float_amp*Math.sin(float_timer/30.0*Math.PI)) * sc - drawH(sc) * 0.5);
 	}
 	
 	//get-set
