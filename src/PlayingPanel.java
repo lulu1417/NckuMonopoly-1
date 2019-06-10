@@ -1,3 +1,4 @@
+//author: 彭寶儒、茅品淵
 import java.awt.AlphaComposite;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -24,6 +25,20 @@ public class PlayingPanel extends MainPanel{
 		this.selections = new ClickButton[3];
 		this.dieSelections = new ClickButton[6];
 		this.mouse_pos = new Point(0,0);
+		//music button
+		try {
+			URL url = this.getClass().getResource("/music.png");
+			ImageIcon image = new ImageIcon(ImageIO.read(url));
+			double sc = (double)this.getWidth() / Game.Width;
+			ClickButton musicButton = new ClickButton(1150, 580, 100, 100, sc, image,"Music");
+			musicButton.setOpaque(false);
+			musicButton.setContentAreaFilled(false);
+			musicButton.setFocusPainted(false);
+			musicButton.setBorder(null);
+			this.add(musicButton);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	//method
 	public void paint(Graphics g) {
@@ -65,7 +80,7 @@ public class PlayingPanel extends MainPanel{
 	}
 	public void createRollingButton() {
 		if(this.rollingButton != null) return;
-		int w = 250, h = 100;
+		int w = 250, h = 80;
 		double sc = (double)this.getWidth() / Game.Width;
 		this.rollingButton = new ClickButton((Game.Width-250)/2+250, Game.Height/2, w, h, sc, "擲骰子", "Roll");
 		this.add(rollingButton);
@@ -76,9 +91,9 @@ public class PlayingPanel extends MainPanel{
 		this.rollingButton = null;
 	}
 	public void createDieSelections(String eventName) {
-		int w = 100, h = 100;
+		int w = 80, h = 80;
 		double sc = (double)this.getWidth() / Game.Width;
-		this.showEventName(eventName, (Game.Width-250)/2+250-50,(int) (Game.Height/2-2*(h+25)+10+(0.5*h)), -1);
+		this.showEventName(eventName, (Game.Width-250)/2+250, (int) (Game.Height/2-2*(h+25)+10+(0.5*h)), -1);
 		for(int i=0; i<6; ++i) {
 			String signal;
 			signal = "Select die point: " + (i+1);
@@ -103,9 +118,9 @@ public class PlayingPanel extends MainPanel{
 		eventName = null;
 	}
 	public void createSelections(String eventName, String selection1, String selection2, String selection3) {
-		int w = 500, h = 100;
+		int w = 400, h = 80;
 		double sc = (double)this.getWidth() / Game.Width;
-		this.showEventName(eventName, (Game.Width-250)/2+250-50,(int) (Game.Height/2-2*h-10+(0.5*h)), -1);
+		this.showEventName(eventName, (Game.Width-250)/2+250, (int) (Game.Height/2-2*(h+20)+20+30), -1);
 		for(int i=0; i<3; ++i) {
 			String text, signal;
 			switch (i) {
@@ -126,7 +141,7 @@ public class PlayingPanel extends MainPanel{
 				if(this.selections[i] != null) this.selections[i] = null;
 				continue;
 			}
-			this.selections[i] = new ClickButton((Game.Width-250)/2+250, Game.Height/2+(i-1)*h+30, w, h, sc, text, signal);
+			this.selections[i] = new ClickButton((Game.Width-250)/2+250, Game.Height/2+(i-1)*(h+20)+30, w, h, sc, text, signal);
 			this.add(selections[i]);
 		}
 	}

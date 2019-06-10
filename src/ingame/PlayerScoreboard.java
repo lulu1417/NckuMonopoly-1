@@ -34,7 +34,8 @@ public class PlayerScoreboard extends GraphicImgItem{
 				number = money;
 			}
 			this.text[i] = new GraphicTextItem(x+65, y+30+37*i, fontSize, title, itemList);
-			this.num[i] = new GraphicTextItem(x+155, y+30+37*i, fontSize, Integer.toString(number), itemList);
+			this.num[i] = new GraphicTextItem(x+115, y+30+37*i, fontSize, Integer.toString(number), itemList);
+			this.num[i].setCentered(false);
 		}
 		for(int i=0; i<this.additions.length; ++i) this.additions[i] = null;
 	}
@@ -57,7 +58,7 @@ public class PlayerScoreboard extends GraphicImgItem{
 			color = new Color(0xCA0000);
 		}
 		else return;
-		int x = (int) this.rect.getX() + 245;
+		int x = (int) this.rect.getX() + 225;
 		int y = (int) this.rect.getY() + 30 + 37*type;
 		//addition number
 		if(this.additions[type] != null) this.additions[type].kill();

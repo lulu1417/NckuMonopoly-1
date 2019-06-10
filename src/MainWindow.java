@@ -18,8 +18,8 @@ public class MainWindow extends JFrame {
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setLayout(null);
-		//this.setExtendedState(JFrame.MAXIMIZED_BOTH); 
-		//this.setUndecorated(true);
+		this.setExtendedState(JFrame.MAXIMIZED_BOTH); 
+		this.setUndecorated(true);
 		//show
 		this.setVisible(true);
 	}

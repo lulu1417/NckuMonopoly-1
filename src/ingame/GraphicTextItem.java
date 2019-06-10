@@ -33,13 +33,14 @@ public class GraphicTextItem extends GraphicItem{
 		g2.setComposite(ac);
 		g.setFont(new Font("Microsoft Jhenghei", Font.BOLD, (int) (fontSize*sc)));
 		g.setColor(this.color);
-		g.drawString(text, this.drawX(sc), this.drawY(sc));
-	}
-	protected int drawW(double sc) {
-		return (int) (text.length()* fontSize *sc);
+		int draw_x = this.drawX(sc);
+		if(this.centered) {
+			int width = g.getFontMetrics().stringWidth(text);
+			draw_x -= width/2;
+		}
+		g.drawString(text, draw_x, this.drawY(sc));
 	}
 	protected int drawX(double sc) {
-		if(this.centered) return (int) (pos.getX() * sc - drawW(sc) * 0.5);
 		return (int) (pos.getX() * sc);
 	}
 	protected int drawY(double sc) {

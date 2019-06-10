@@ -86,9 +86,9 @@ public class NckuMonopoly {
 								fateTypeStr = "愛情";
 								break;
 							}
-							String str = "　　小遊戲結束，獲得" + fateTypeStr + "分數" + fatePoint + "分";
+							String str = "小遊戲結束，獲得" + fateTypeStr + "分數" + fatePoint + "分";
 							this.setGameState(GameState.EVENT);
-							mainW.getPlayingPanel().showEventName(str, (Game.Width-250)/2+250-50, Game.Height/2-100, 60);
+							mainW.getPlayingPanel().showEventName(str, (Game.Width-250)/2+250, Game.Height/2-100, 60);
 							this.tickStart(21);
 						}
 					} catch (Exception e) {
@@ -170,7 +170,7 @@ public class NckuMonopoly {
 						Cell steppedCell = currentPlayer.getCurrentCell();
 						switch(steppedCell.getCellType()) {
 							case NOTHING: //no event
-								mainW.getPlayingPanel().showEventName("　　　這裡什麼都沒有...", (Game.Width-250)/2+250-50, Game.Height/2-100, 90);
+								mainW.getPlayingPanel().showEventName("這裡什麼都沒有...", (Game.Width-250)/2+250, Game.Height/2-100, 90);
 								tickStart(21);
 								break;
 							case SELECT: //select event
@@ -201,7 +201,7 @@ public class NckuMonopoly {
 								mainW.getPlayingPanel().createSelections(steppedCell.getMessage(),selections[0],selections[1],selections[2]);
 								break;
 							case START: //start event
-								mainW.getPlayingPanel().showEventName("回到起點，獲得一百元", (Game.Width-250)/2+250-50, Game.Height/2-100, 90);
+								mainW.getPlayingPanel().showEventName("回到起點，獲得一百元", (Game.Width-250)/2+250, Game.Height/2-100, 90);
 								currentPlayer.addMoney(100);
 								tickStart(21);
 								break;
@@ -211,17 +211,17 @@ public class NckuMonopoly {
 								int chanceNum = rng.nextInt(chanceCount);
 								switch (chanceNum) {
 								case 0: {
-									mainW.getPlayingPanel().showEventName("　　Java翹課，課業減半", (Game.Width-250)/2+250-50, Game.Height/2-100, 90);
+									mainW.getPlayingPanel().showEventName("Java翹課，課業減半", (Game.Width-250)/2+250, Game.Height/2-100, 90);
 									currentPlayer.addLesson(-currentPlayer.getLesson()/2);
 									tickStart(21);
 								} break;
 								case 1: {
-									mainW.getPlayingPanel().showEventName("　　對中發票，獲得200元", (Game.Width-250)/2+250-50, Game.Height/2-100, 90);
+									mainW.getPlayingPanel().showEventName("對中發票，獲得200元", (Game.Width-250)/2+250, Game.Height/2-100, 90);
 									currentPlayer.addMoney(200);
 									tickStart(21);
 								} break;
 								case 2: {
-									mainW.getPlayingPanel().showEventName("　撿到50元", (Game.Width-250)/2+250-50, Game.Height/2-100, 90);
+									mainW.getPlayingPanel().showEventName("撿到50元", (Game.Width-250)/2+250, Game.Height/2-100, 90);
 									currentPlayer.addMoney(50);
 									tickStart(21);
 								} break;
@@ -235,15 +235,15 @@ public class NckuMonopoly {
 									mainW.getPlayingPanel().createSelections("衣服穿反",chanceSelections[0],chanceSelections[1],chanceSelections[2]);
 								} break;
 								case 4: {
-									mainW.getPlayingPanel().showEventName("　　考上研究所，學業+50", (Game.Width-250)/2+250-50, Game.Height/2-100, 90);
+									mainW.getPlayingPanel().showEventName("考上研究所，學業+50", (Game.Width-250)/2+250, Game.Height/2-100, 90);
 									currentPlayer.addLesson(50);
 									tickStart(21);
 								} break;
 								case 5: {
-									mainW.getPlayingPanel().createDieSelections("　　搭乘台南Uber，自由選擇步數前進");
+									mainW.getPlayingPanel().createDieSelections("搭乘台南Uber，自由選擇步數前進");
 								} break;
 								case 6: {
-									mainW.getPlayingPanel().showEventName("沒注意行人號誌，發生車禍", (Game.Width-250)/2+250-50, Game.Height/2-100, 90);
+									mainW.getPlayingPanel().showEventName("沒注意行人號誌，發生車禍", (Game.Width-250)/2+250, Game.Height/2-100, 90);
 									tickStart(131);
 								} break;
 								default:
@@ -251,23 +251,23 @@ public class NckuMonopoly {
 								}
 								break;
 							case FATE: //fate event
-								mainW.getPlayingPanel().showEventName("命運：" + steppedCell.getMessage(), (Game.Width-250)/2+250-50, Game.Height/2-100, 60);
+								mainW.getPlayingPanel().showEventName("命運：" + steppedCell.getMessage(), (Game.Width-250)/2+250, Game.Height/2-100, 60);
 								tickStart(51);
 								break;
 							case HOSPITAL: //hospital event
-								mainW.getPlayingPanel().showEventName(steppedCell.getMessage(), (Game.Width-250)/2+250-50, Game.Height/2-100, 60);
+								mainW.getPlayingPanel().showEventName(steppedCell.getMessage(), (Game.Width-250)/2+250, Game.Height/2-100, 60);
 								currentPlayer.setFreezeCount(2);
 								tickStart(21);
 								break;
 							default: //shop event
-								mainW.getPlayingPanel().showEventName("", (Game.Width-250)/2+250-50, Game.Height/2-100, 90);
+								mainW.getPlayingPanel().showEventName("", (Game.Width-250)/2+250, Game.Height/2-100, 90);
 								tickStart(21);
 								break;
 						}
 					} else if(tick==50) { //normal end phase
 						//lose check
 						if(currentPlayer.getLesson()<=0) {
-							mainW.getPlayingPanel().showEventName("課業歸零，二一出局", (Game.Width-250)/2+250-50, Game.Height/2-100, 90);
+							mainW.getPlayingPanel().showEventName("課業歸零，二一出局", (Game.Width-250)/2+250, Game.Height/2-100, 90);
 							currentPlayer.setEliminated(true);
 						}
 						//next player's rolling state
@@ -277,7 +277,7 @@ public class NckuMonopoly {
 							this.currentPlayer = Game.players.get(id);
 							if(!currentPlayer.getEliminated()) break;
 							if(i==Game.playerCount-1) { //all players are eliminated
-								mainW.getPlayingPanel().showEventName("全體二一", (Game.Width-250)/2+250-50, Game.Height/2-100, 90);
+								mainW.getPlayingPanel().showEventName("全體二一", (Game.Width-250)/2+250, Game.Height/2-100, 90);
 								tickStart(-10000);
 								tickPause();
 							}
@@ -290,7 +290,7 @@ public class NckuMonopoly {
 						if(freezeCount>0) { //next player is being frozen
 							this.nextMoveNoEvent = true;
 							String showStr = "此玩家被暫停，剩餘" + (freezeCount-1) + "回合";
-							mainW.getPlayingPanel().showEventName(showStr, (Game.Width-250)/2+250-50, Game.Height/2-100, 90);
+							mainW.getPlayingPanel().showEventName(showStr, (Game.Width-250)/2+250, Game.Height/2-100, 90);
 						} else {
 							this.setGameState(GameState.ROLLING);
 							this.tickPause();

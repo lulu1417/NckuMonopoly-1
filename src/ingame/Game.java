@@ -20,7 +20,7 @@ public class Game {
 		new Cell("「飛撲」雕塑",465,690,CellType.SELECT).setScore(-20).setMessage("穿越飛撲，微積分被當").setSelectPolicy(PlayerScoreType.LESSON),
 		new Cell("總圖書館",560,690,CellType.FATE).setScore(1).setMessage("知識王"),
 		new Cell("資訊系館",655,690,CellType.SELECT).setScore(30).setMessage("認真上課"),
-		new Cell("　D24",750,690,CellType.CHANCE),
+		new Cell("D24",750,690,CellType.CHANCE),
 		new Cell("九乘九",845,690,CellType.SELECT).setScore(-10).setMessage("機車違停被拖吊"),
 		new Cell("育樂街",940,690,CellType.SELECT).setScore(-10).setMessage("吃到蟑螂"),
 		new Cell("勝九舍",1035,690,CellType.SELECT).setScore(-10).setMessage("和室友同時吹頭髮，全宿舍跳電"),

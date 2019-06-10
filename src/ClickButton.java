@@ -13,7 +13,7 @@ public class ClickButton extends JButton {
 		super(text);
 		this.signal = signal;
 		this.setLocation((int) ((x-w/2)*sc), (int) ((y-h/2)*sc));
-		this.setSize(w,h);
+		this.setSize((int) (w*sc),(int) (h*sc));
 		//listener
 		ClickButton self = this;
 		ActionListener listener = new ActionListener() {
@@ -24,14 +24,14 @@ public class ClickButton extends JButton {
 		};
 		this.addActionListener(listener);
 		//font
-		Font font = new Font("Microsoft Jhenghei", Font.BOLD, (int) (h*0.5));
+		Font font = new Font("Microsoft Jhenghei", Font.BOLD, (int) (h*0.6));
 		this.setFont(font);
 	}
 	public ClickButton(int x, int y, int w, int h, double sc, ImageIcon img, String signal) {
 		super(img);
 		this.signal = signal;
 		this.setLocation((int) ((x-w/2)*sc), (int) ((y-h/2)*sc));
-		this.setSize(w,h);
+		this.setSize((int) (w*sc),(int) (h*sc));
 		//listener
 		ClickButton self = this;
 		ActionListener listener = new ActionListener() {
