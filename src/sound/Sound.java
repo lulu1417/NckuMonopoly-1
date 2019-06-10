@@ -19,11 +19,11 @@ public class Sound{
 					clip.start();
 				}
 				else {
-					System.out.println("Turn off Sound effect");
+					System.out.println("Turn off sound effect");
 				}
 			}
 			else {
-				System.out.println("Sound effect File isn't exists");
+				System.out.println("Sound effect file doesn't exist");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
