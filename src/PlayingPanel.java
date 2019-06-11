@@ -26,11 +26,11 @@ public class PlayingPanel extends MainPanel{
 		this.selections = new ClickButton[3];
 		this.dieSelections = new ClickButton[6];
 		this.mouse_pos = new Point(0,0);
+		double sc = (double)this.getWidth() / Game.Width;
 		//music button
 		try {
 			URL url = this.getClass().getResource("/music.png");
 			ImageIcon image = new ImageIcon(ImageIO.read(url));
-			double sc = (double)this.getWidth() / Game.Width;
 			musicButton = new ClickButton(1150, 580, 100, 100, sc, image, "Music");
 			musicButton.setOpaque(false);
 			musicButton.setContentAreaFilled(false);
@@ -44,7 +44,6 @@ public class PlayingPanel extends MainPanel{
 		try {
 			URL url = this.getClass().getResource("/sound.png");
 			ImageIcon image = new ImageIcon(ImageIO.read(url));
-			double sc = (double)this.getWidth() / Game.Width;
 			soundButton = new ClickButton(1080, 580, 100, 100, sc, image, "Sound");
 			soundButton.setOpaque(false);
 			soundButton.setContentAreaFilled(false);
@@ -53,6 +52,18 @@ public class PlayingPanel extends MainPanel{
 			this.add(soundButton);
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+		//end button
+		{
+			int w = 180, h = 60;
+			ClickButton endButton = new ClickButton(Game.Width/2+w/2+8, Game.Height-50, w, h, sc, "退出遊戲", "Exit");
+			this.add(endButton);
+		}
+		//back button
+		{
+			int w = 180, h = 60;
+			ClickButton backButton = new ClickButton(Game.Width/2-w/2-8, Game.Height-50, w, h, sc, "回到標題", "Back");
+			this.add(backButton);
 		}
 	}
 	//method

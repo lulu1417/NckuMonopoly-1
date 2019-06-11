@@ -1,8 +1,6 @@
 //author: 彭寶儒
 package sound;
 
-import java.io.File;
-import java.net.URI;
 import java.net.URL;
 
 import javax.sound.sampled.AudioInputStream;
@@ -19,7 +17,7 @@ public class Music {
 			AudioInputStream audio = AudioSystem.getAudioInputStream(musicLocation);
 			clip = AudioSystem.getClip();
 			clip.open(audio);
-			setVol(-20, clip);
+			setVol(-10, clip);
 			clip.start(); 
 			clip.loop(Clip.LOOP_CONTINUOUSLY);
 		} catch (Exception e) {

@@ -1,10 +1,9 @@
 import java.awt.Point;
-import java.net.URL;
+import java.awt.event.WindowEvent;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
 import java.util.Scanner;
-
-import org.omg.CORBA.Current;
 
 import ingame.Cell;
 import ingame.Game;
@@ -30,6 +29,7 @@ public class NckuMonopoly {
 		this.steppedScore = 0;
 		this.nextMoveNoEvent = false;
 		this.music = new Music("/bgm.wav");
+		this.music.check();
 		this.musicPlayingBeforeFate = true;
 		this.soundOff = false;
 
@@ -37,11 +37,17 @@ public class NckuMonopoly {
 		while(true) {
 
 			//timer
+			if(Game.gamestate == GameState.START) mainW.getStartPanel().timerRun();
 			for(int i=0; i<Game.graphicItems.size(); ++i) Game.graphicItems.get(i).timerRun();
 			
 			//receive signals
 			for(String signal: Game.signals) {
 				System.out.println("Got signal: "+signal);
+				if(signal.equals("Button clicked: Exit")) mainW.dispatchEvent(new WindowEvent(mainW, WindowEvent.WINDOW_CLOSING));
+				else if(signal.equals("Button clicked: Back")) {
+					pauseBgMusic();
+					this.setGameState(GameState.START);
+				}
 				if(Game.gamestate!=GameState.START && Game.gamestate!=GameState.FATE) {
 					if(signal.equals("Button clicked: Music")) this.changeBgMusicState();
 					else if (signal.equals("Button clicked: Sound")) this.changeSoundState();
@@ -444,6 +450,15 @@ public class NckuMonopoly {
 	//method
 	public void start() {
 		this.setGameState(GameState.ROLLING); //page
+		//re-initialize items
+		this.steppedScore = 0;
+		this.nextMoveNoEvent = false;
+		this.music = new Music("/bgm.wav");
+		this.music.check();
+		this.musicPlayingBeforeFate = true;
+		this.soundOff = false;
+		Game.graphicItems = new ArrayList<GraphicItem>();
+		Game.players = new ArrayList<Player>();
 		//bg
 		GraphicImgItem bg = new GraphicImgItem(Game.Width/2, Game.Height/2, Game.Width, Game.Height, "/bg.png", Game.graphicItems);
 		//players
@@ -472,6 +487,8 @@ public class NckuMonopoly {
 		this.tickPause();
 		//roll
 		this.rollingNum = 0;
+		//music
+		playBgMusic();
 	}
 	public void changeSoundState() {
 		soundOff = !soundOff;
