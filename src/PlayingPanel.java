@@ -27,10 +27,10 @@ public class PlayingPanel extends MainPanel{
 		this.mouse_pos = new Point(0,0);
 		//music button
 		try {
-			URL url = this.getClass().getResource("/music.png");
+			URL url = this.getClass().getResource("/sound.png");
 			ImageIcon image = new ImageIcon(ImageIO.read(url));
 			double sc = (double)this.getWidth() / Game.Width;
-			ClickButton musicButton = new ClickButton(1150, 580, 100, 100, sc, image,"Music");
+			musicButton = new ClickButton(1150, 580, 100, 100, sc, image,"Music");
 			musicButton.setOpaque(false);
 			musicButton.setContentAreaFilled(false);
 			musicButton.setFocusPainted(false);
@@ -82,7 +82,7 @@ public class PlayingPanel extends MainPanel{
 		if(this.rollingButton != null) return;
 		int w = 250, h = 80;
 		double sc = (double)this.getWidth() / Game.Width;
-		this.rollingButton = new ClickButton((Game.Width-250)/2+250, Game.Height/2, w, h, sc, "擲骰子", "Roll");
+		this.rollingButton = new ClickButton(Game.Width/2, Game.Height/2, w, h, sc, "擲骰子", "Roll");
 		this.add(rollingButton);
 	}
 	public void deleteRollingButton() {
@@ -93,14 +93,14 @@ public class PlayingPanel extends MainPanel{
 	public void createDieSelections(String eventName) {
 		int w = 80, h = 80;
 		double sc = (double)this.getWidth() / Game.Width;
-		this.showEventName(eventName, (Game.Width-250)/2+250, (int) (Game.Height/2-2*(h+25)+10+(0.5*h)), -1);
+		this.showEventName(eventName, Game.Width/2, (int) (Game.Height/2-2*(h+25)+10+(0.5*h)), -1);
 		for(int i=0; i<6; ++i) {
 			String signal;
 			signal = "Select die point: " + (i+1);
 			try {
 				URL url = this.getClass().getResource("/die"+ (i+1) +".png");
 				ImageIcon img = new ImageIcon(ImageIO.read(url));
-				this.dieSelections[i] = new ClickButton((int) ((Game.Width-250)/2+250 + (i/3-0.5)*120), Game.Height/2+(i%3-1)*(h+25)+50, w, h, sc, img, signal);
+				this.dieSelections[i] = new ClickButton((int) (Game.Width/2 + (i/3-0.5)*120), Game.Height/2+(i%3-1)*(h+25)+50, w, h, sc, img, signal);
 				this.add(dieSelections[i]);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -120,7 +120,7 @@ public class PlayingPanel extends MainPanel{
 	public void createSelections(String eventName, String selection1, String selection2, String selection3) {
 		int w = 400, h = 80;
 		double sc = (double)this.getWidth() / Game.Width;
-		this.showEventName(eventName, (Game.Width-250)/2+250, (int) (Game.Height/2-2*(h+20)+20+30), -1);
+		this.showEventName(eventName, Game.Width/2, (int) (Game.Height/2-2*(h+20)+20+30), -1);
 		for(int i=0; i<3; ++i) {
 			String text, signal;
 			switch (i) {
@@ -141,7 +141,7 @@ public class PlayingPanel extends MainPanel{
 				if(this.selections[i] != null) this.selections[i] = null;
 				continue;
 			}
-			this.selections[i] = new ClickButton((Game.Width-250)/2+250, Game.Height/2+(i-1)*(h+20)+30, w, h, sc, text, signal);
+			this.selections[i] = new ClickButton(Game.Width/2, Game.Height/2+(i-1)*(h+20)+30, w, h, sc, text, signal);
 			this.add(selections[i]);
 		}
 	}
@@ -155,6 +155,15 @@ public class PlayingPanel extends MainPanel{
 		eventName.kill();
 		eventName = null;
 	}
+	public void changeMusicButton(boolean playing) {
+		try {
+			URL url = this.getClass().getResource(playing ? "/sound.png" : "/sound_no.png");
+			ImageIcon image = new ImageIcon(ImageIO.read(url));
+			this.musicButton.setIcon(image);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 	//set-get
 	public Point getMouseLocation() {
 		return this.mouse_pos;
@@ -165,4 +174,5 @@ public class PlayingPanel extends MainPanel{
 	private ClickButton[] selections;
 	private ClickButton[] dieSelections;
 	private Point mouse_pos;
+	private ClickButton musicButton;
 }

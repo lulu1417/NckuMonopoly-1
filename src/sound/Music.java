@@ -2,37 +2,41 @@
 package sound;
 
 import java.io.File;
+import java.net.URI;
+import java.net.URL;
+
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.FloatControl;
 
 public class Music {
-	public void playMusic(String musicLocation) {
-		File musicPath = new File (musicLocation);
+	public Music(URL musicLocation) {
+		this.playing = true;
+		this.clipTimePosition = 0;
+		this.playMusic(musicLocation);
+	}
+	public void playMusic(URL musicLocation) {
 		try {
-			if(musicPath.exists()) {
-				AudioInputStream audio = AudioSystem.getAudioInputStream(musicPath);
-				clip = AudioSystem.getClip();
-				clip.open(audio);
-				setVol(-20, clip);
-				clip.start(); 
-				clip.loop(Clip.LOOP_CONTINUOUSLY);
-			}
-			else {
-				System.out.println("Music File doesn't exist");
-			}
+			AudioInputStream audio = AudioSystem.getAudioInputStream(musicLocation);
+			clip = AudioSystem.getClip();
+			clip.open(audio);
+			setVol(-20, clip);
+			clip.start(); 
+			clip.loop(Clip.LOOP_CONTINUOUSLY);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 	}
-	public static void check(boolean off) {
-		if(off) {
+	public void check() {
+		if(this.playing) {
+			this.playing = false;
 			clip.stop();
 			clipTimePosition = clip.getMicrosecondPosition();
 		}
 		else {
+			this.playing = true;
 			clip.setMicrosecondPosition(clipTimePosition);
 			clip.start();
 		}
@@ -42,8 +46,11 @@ public class Music {
 		FloatControl gain = (FloatControl)clip.getControl(FloatControl.Type.MASTER_GAIN);
 		float db = (float)vol;
 		gain.setValue(db);
-		
 	}
-	static Clip clip;
-	static long clipTimePosition;
+	public boolean getPlaying() {
+		return this.playing;
+	}
+	private Clip clip;
+	private long clipTimePosition;
+	private boolean playing;
 }
