@@ -4,6 +4,8 @@ import java.util.Iterator;
 import java.util.Random;
 import java.util.Scanner;
 
+import org.omg.CORBA.Current;
+
 import ingame.Cell;
 import ingame.Game;
 import ingame.GameState;
@@ -12,6 +14,7 @@ import ingame.GraphicItem;
 import ingame.GraphicTextItem;
 import ingame.Player;
 import sound.Music;
+import sound.Sound;
 
 public class NckuMonopoly {
 
@@ -26,9 +29,9 @@ public class NckuMonopoly {
 		this.setGameState(GameState.START);
 		this.steppedScore = 0;
 		this.nextMoveNoEvent = false;
-		URL url = this.getClass().getResource("/bgm.wav");
-		this.music = new Music(url);
+		this.music = new Music("/bgm.wav");
 		this.musicPlayingBeforeFate = true;
+		this.soundOff = false;
 
 		//thread
 		while(true) {
@@ -39,8 +42,9 @@ public class NckuMonopoly {
 			//receive signals
 			for(String signal: Game.signals) {
 				System.out.println("Got signal: "+signal);
-				if(Game.gamestate!=GameState.START && Game.gamestate!=GameState.FATE && signal.equals("Button clicked: Music")) {
-					this.changeBgMusicState();
+				if(Game.gamestate!=GameState.START && Game.gamestate!=GameState.FATE) {
+					if(signal.equals("Button clicked: Music")) this.changeBgMusicState();
+					else if (signal.equals("Button clicked: Sound")) this.changeSoundState();
 				}
 				switch (Game.gamestate) {
 				case START:
@@ -80,6 +84,10 @@ public class NckuMonopoly {
 							int fateType = scanner.nextInt();
 							String fateTypeStr;
 							int fatePoint = scanner.nextInt();
+							if(!soundOff) {
+								if(fatePoint>0) Sound.playSound("/addPoints.wav");
+								else Sound.playSound("/deduct.wav");
+							}
 							switch (fateType) {
 							case 1:
 								currentPlayer.addLesson(fatePoint);
@@ -99,6 +107,7 @@ public class NckuMonopoly {
 							mainW.getPlayingPanel().showEventName(str, Game.Width/2, Game.Height/2-100, 60);
 							this.tickStart(21);
 						}
+						scanner.close();
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -144,6 +153,7 @@ public class NckuMonopoly {
 							//die img
 							String dieImg = "/die" + newNum + ".png";
 							GraphicItem die = new GraphicImgItem(Game.Width/2, Game.Height/2, 100, 100, dieImg, Game.graphicItems);
+							if(!soundOff) Sound.playSound("/rolling.wav");
 							die.setLifeTime(i==times-1 ? 50 : standardTickAdd);
 							if(i == times-1) { //last time
 								//die number hint
@@ -161,6 +171,7 @@ public class NckuMonopoly {
 			case MOVING:
 				if(ticking) {
 					if(++tick>=20) {
+						if(!soundOff) Sound.playSound("/move.wav");
 						if(this.rollingNum>0) this.currentPlayer.moveToNext();
 						if(--this.rollingNum<=0) this.setGameState(GameState.EVENT);
 						this.tickStart();
@@ -179,6 +190,7 @@ public class NckuMonopoly {
 						switch(steppedCell.getCellType()) {
 							case NOTHING: //no event
 								mainW.getPlayingPanel().showEventName("這裡什麼都沒有...", Game.Width/2, Game.Height/2-100, 90);
+								if(!soundOff) Sound.playSound("/nothing.wav");
 								tickStart(21);
 								break;
 							case SELECT: //select event
@@ -203,6 +215,10 @@ public class NckuMonopoly {
 								}
 								int score = steppedCell.getScore();
 								this.steppedScore = score;
+								if(!soundOff) {
+									if(score>0) Sound.playSound("/goodluck.wav");
+									else Sound.playSound("/badluck.wav");
+								}
 								for(int i=0;i<selections.length;++i)
 									if(!selections[i].equals(""))
 										selections[i] = selections[i] + (score>0?"+":"") + score;
@@ -210,6 +226,10 @@ public class NckuMonopoly {
 								break;
 							case START: //start event
 								mainW.getPlayingPanel().showEventName("回到起點，獲得一百元", Game.Width/2, Game.Height/2-100, 90);
+								if(!soundOff) {
+									Sound.playSound("/goodluck.wav");
+									Sound.playSound("/addMoney.wav");
+								}
 								currentPlayer.addMoney(100);
 								tickStart(21);
 								break;
@@ -221,16 +241,28 @@ public class NckuMonopoly {
 								case 0: {
 									mainW.getPlayingPanel().showEventName("Java翹課，課業減半", Game.Width/2, Game.Height/2-100, 90);
 									currentPlayer.addLesson(-currentPlayer.getLesson()/2);
+									if(!soundOff) {
+										Sound.playSound("/badluck.wav");
+										Sound.playSound("/deduct.wav");
+									}
 									tickStart(21);
 								} break;
 								case 1: {
 									mainW.getPlayingPanel().showEventName("對中發票，獲得200元", Game.Width/2, Game.Height/2-100, 90);
 									currentPlayer.addMoney(200);
+									if(!soundOff) {
+										Sound.playSound("/goodluck.wav");
+										Sound.playSound("/addMoney.wav");
+									}
 									tickStart(21);
 								} break;
 								case 2: {
 									mainW.getPlayingPanel().showEventName("撿到50元", Game.Width/2, Game.Height/2-100, 90);
 									currentPlayer.addMoney(50);
+									if(!soundOff) {
+										Sound.playSound("/goodluck.wav");
+										Sound.playSound("/addMoney.wav");
+									}
 									tickStart(21);
 								} break;
 								case 3: {
@@ -241,17 +273,27 @@ public class NckuMonopoly {
 										if(!chanceSelections[i].equals(""))
 											chanceSelections[i] = chanceSelections[i] + chanceScore;
 									mainW.getPlayingPanel().createSelections("衣服穿反",chanceSelections[0],chanceSelections[1],chanceSelections[2]);
+									if(!soundOff) {
+										Sound.playSound("/badluck.wav");
+										Sound.playSound("/deduct.wav");
+									}
 								} break;
 								case 4: {
 									mainW.getPlayingPanel().showEventName("考上研究所，學業+50", Game.Width/2, Game.Height/2-100, 90);
 									currentPlayer.addLesson(50);
+									if(!soundOff) {
+										Sound.playSound("/goodluck.wav");
+										Sound.playSound("/addPoints.wav");
+									}
 									tickStart(21);
 								} break;
 								case 5: {
 									mainW.getPlayingPanel().createDieSelections("搭乘台南Uber，自由選擇步數前進");
+									if(!soundOff) Sound.playSound("/goodluck.wav");
 								} break;
 								case 6: {
 									mainW.getPlayingPanel().showEventName("沒注意行人號誌，發生車禍", Game.Width/2, Game.Height/2-100, 90);
+									if(!soundOff) Sound.playSound("/badluck.wav");
 									tickStart(131);
 								} break;
 								default:
@@ -268,41 +310,77 @@ public class NckuMonopoly {
 								tickStart(21);
 								break;
 							default: //shop event
-								mainW.getPlayingPanel().showEventName("", Game.Width/2, Game.Height/2-100, 90);
-								tickStart(21);
+								if(!soundOff) {
+									Sound.playSound("/goodluck.wav");
+									Sound.playSound("/addMoney.wav");
+								}
+								String ShopSelections[] = {"課業+","社團+","愛情+"};
+								int ExchangeScore = currentPlayer.getMoney();
+								this.steppedScore = ExchangeScore;
+								System.out.println("");
+								for(int i=0;i<ShopSelections.length;++i)
+									if(!ShopSelections[i].equals("+"))
+										ShopSelections[i] = ShopSelections[i] + ExchangeScore;
+								mainW.getPlayingPanel().createSelections("商店：可將金錢換為任一學分分數", ShopSelections[0],ShopSelections[1],ShopSelections[2]);
+								currentPlayer.setMoney(0);
 								break;
 						}
 					} else if(tick==50) { //normal end phase
 						//lose check
 						if(currentPlayer.getLesson()<=0) {
+							if(!soundOff) Sound.playSound("/badluck.wav");
 							mainW.getPlayingPanel().showEventName("課業歸零，二一出局", Game.Width/2, Game.Height/2-100, 90);
 							currentPlayer.setEliminated(true);
 						}
-						//next player's rolling state
-						int id = this.currentPlayer.getID();
-						for(int i=0; i<Game.playerCount; ++i) {
-							if(++id>=Game.playerCount) id=0;
-							this.currentPlayer = Game.players.get(id);
-							if(!currentPlayer.getEliminated()) break;
-							if(i==Game.playerCount-1) { //all players are eliminated
-								mainW.getPlayingPanel().showEventName("全體二一", Game.Width/2, Game.Height/2-100, 90);
-								tickStart(-10000);
-								tickPause();
+						//win check
+						int threshlod = 300;
+						if(currentPlayer.getLesson()>=threshlod //player's score is bigger than threshold, this player win
+							|| currentPlayer.getLove()>=threshlod
+							|| currentPlayer.getClub()>=threshlod) {
+							this.setGameState(GameState.END);
+							if(!soundOff) Sound.playSound("/win.wav");
+							tickStart();
+						} else if(Player.getEliminatedPlayerCount() == Game.playerCount-1) { //only one player isn't eliminated, this player win
+							for(Player player: Game.players) {
+								if(!player.getEliminated()) {
+									this.currentPlayer = player;
+									break;
+								}
 							}
+							this.setGameState(GameState.END);
+							if(!soundOff) Sound.playSound("/win.wav");
+							tickStart();
 						}
-						for(Player player: Game.players) {
-							if(player == currentPlayer) player.select();
-							else player.unselect();
-						}
-						int freezeCount = currentPlayer.checkFreeze();
-						if(freezeCount>0) { //next player is being frozen
-							this.nextMoveNoEvent = true;
-							String showStr = "此玩家被暫停，剩餘" + (freezeCount-1) + "回合";
-							mainW.getPlayingPanel().showEventName(showStr, Game.Width/2, Game.Height/2-100, 90);
-						} else {
-							this.setGameState(GameState.ROLLING);
-							this.tickPause();
-							mainW.getPlayingPanel().createRollingButton();
+						//next player's rolling state
+						if(Game.gamestate != GameState.END) {
+							//choose next player
+							int id = this.currentPlayer.getID();
+							for(int i=0; i<Game.playerCount; ++i) {
+								if(++id>=Game.playerCount) id=0;
+								this.currentPlayer = Game.players.get(id);
+								if(!currentPlayer.getEliminated()) break; //not select eliminated player
+								if(i==Game.playerCount-1) { //all player got eliminated, last player win
+									setGameState(GameState.END);
+									if(!soundOff) Sound.playSound("/win.wav");
+									tickStart();
+								}
+							}
+							//select next player and unselect others
+							for(Player player: Game.players) {
+								if(player == currentPlayer) player.select();
+								else player.unselect();
+							}
+							int freezeCount = currentPlayer.checkFreeze();
+							if(freezeCount>0) { //next player is being frozen
+								this.nextMoveNoEvent = true;
+								String showStr = "此玩家被暫停，剩餘" + (freezeCount-1) + "回合";
+								if(!soundOff) Sound.playSound("/badluck.wav");
+								mainW.getPlayingPanel().showEventName(showStr, Game.Width/2, Game.Height/2-100, 90);
+							} else { //next player is normal
+								this.setGameState(GameState.ROLLING);
+								this.tickPause();
+								mainW.getPlayingPanel().createRollingButton();
+							}
 						}
 					} else if(tick==110) { //fate
 						Cell steppedCell = currentPlayer.getCurrentCell();
@@ -333,6 +411,13 @@ public class NckuMonopoly {
 				fatePanel.doTick();
 				fatePanel.repaint();
 				break;
+			case END:
+				if(ticking) {
+					if(++tick>=30) {
+						tickPause();
+						mainW.getPlayingPanel().createEndList(currentPlayer.getID());
+					}
+				}
 			default:
 				break;
 			}
@@ -362,6 +447,7 @@ public class NckuMonopoly {
 		//bg
 		GraphicImgItem bg = new GraphicImgItem(Game.Width/2, Game.Height/2, Game.Width, Game.Height, "/bg.png", Game.graphicItems);
 		//players
+		Player.resetEliminatedPlayerCount();
 		for(int i=0; i<Game.playerCount; ++i) {
 			String playerImg = "/player" + (i+1) + ".png";
 			Player player = new Player(77, 120, playerImg, 100, 100, 100, 50, 0, i, Game.graphicItems);
@@ -386,6 +472,10 @@ public class NckuMonopoly {
 		this.tickPause();
 		//roll
 		this.rollingNum = 0;
+	}
+	public void changeSoundState() {
+		soundOff = !soundOff;
+		mainW.getPlayingPanel().changeSoundButton(!soundOff);
 	}
 	public void changeBgMusicState() {
 		music.check();
@@ -452,4 +542,5 @@ public class NckuMonopoly {
 	private int rollingNum, steppedScore;
 	private Music music;
 	private boolean musicPlayingBeforeFate;
+	private boolean soundOff;
 }

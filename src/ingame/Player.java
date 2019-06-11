@@ -33,7 +33,7 @@ public class Player extends GraphicImgItem {
 	public static void repositionPlayers(int cell) {
 		//players in the same cell
 		ArrayList<Player> playersInCell = new ArrayList<Player>();
-		for(Player player: Game.players) if(player.currentCell == cell) playersInCell.add(player);
+		for(Player player: Game.players) if(player.currentCell == cell && !player.getEliminated()) playersInCell.add(player);
 		//position
 		if(playersInCell.size() == 1) { //one player
 			Player player = playersInCell.get(0);
@@ -96,8 +96,30 @@ public class Player extends GraphicImgItem {
 		if(this.freezeCount==0) return 0;
 		return this.freezeCount--;
 	}
+	public void select() {
+		this.setOpacity(1.0);
+		this.scoreboard.select();
+		if(this.selectedHint != null) {
+			this.selectedHint.kill();
+			this.selectedHint = null;
+		}
+		this.selectedHint = new GraphicImgItem((int) this.getX(), (int) this.getY()-150, 50, 50, "/arrow.png", Game.graphicItems);
+		this.selectedHint.setZ(10000);
+		this.selectedHint.setFloating(true, 15);
+	}
+	public void unselect() {
+		if(this.eliminated) this.setOpacity(0.0);
+		else this.setOpacity(0.5);
+		this.scoreboard.unselect();
+		if(this.selectedHint != null) {
+			this.selectedHint.kill();
+			this.selectedHint = null;
+		}
+	}
 	//get-set
 	public void setEliminated(boolean eliminated) {
+		if(!this.eliminated && eliminated) ++eliminatedPlayerCount;
+		else if(this.eliminated && !eliminated) --eliminatedPlayerCount;
 		this.eliminated = eliminated;
 		this.setOpacity(0.0);
 		this.scoreboard.setEliminated(eliminated);
@@ -145,25 +167,11 @@ public class Player extends GraphicImgItem {
 	public int getID() {
 		return this.id;
 	}
-	public void select() {
-		this.setOpacity(1.0);
-		this.scoreboard.select();
-		if(this.selectedHint != null) {
-			this.selectedHint.kill();
-			this.selectedHint = null;
-		}
-		this.selectedHint = new GraphicImgItem((int) this.getX(), (int) this.getY()-150, 50, 50, "/arrow.png", Game.graphicItems);
-		this.selectedHint.setZ(10000);
-		this.selectedHint.setFloating(true, 15);
+	public static void resetEliminatedPlayerCount() {
+		eliminatedPlayerCount = 0;
 	}
-	public void unselect() {
-		if(this.eliminated) this.setOpacity(0.0);
-		else this.setOpacity(0.5);
-		this.scoreboard.unselect();
-		if(this.selectedHint != null) {
-			this.selectedHint.kill();
-			this.selectedHint = null;
-		}
+	public static int getEliminatedPlayerCount() {
+		return eliminatedPlayerCount;
 	}
 	//player with more y should be paint more later
 	@Override
@@ -177,4 +185,5 @@ public class Player extends GraphicImgItem {
 	private PlayerScoreboard scoreboard;
 	private int freezeCount;
 	private boolean eliminated;
+	private static int eliminatedPlayerCount = 0;
 }

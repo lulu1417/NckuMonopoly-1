@@ -1,33 +1,26 @@
 //author: 彭寶儒
 package sound;
 import java.io.File;
+import java.net.URL;
+import java.util.ArrayList;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 //walk, rolling, good/bad event, add, minus, win  
 public class Sound{
-
-	public void playSound(String musicLocation, boolean off) {
-		File soundEffectPath = new File (musicLocation);
+	public Sound(String soundPath) {
 		try {
-			if(soundEffectPath.exists() ) {
-				if(!off) {
-					AudioInputStream audio = AudioSystem.getAudioInputStream(soundEffectPath);
-					Clip clip = AudioSystem.getClip();
-					clip.open(audio);
-					clip.start();
-				}
-				else {
-					System.out.println("Turn off Sound effect");
-				}
-			}
-			else {
-				System.out.println("Sound effect File isn't exists");
-			}
+			URL soundLocation = this.getClass().getResource(soundPath);
+			AudioInputStream audio = AudioSystem.getAudioInputStream(soundLocation);
+			Clip clip = AudioSystem.getClip();
+			clip.open(audio);
+			clip.start();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+	public static void playSound(String musicLocation) {
+		new Sound(musicLocation);
+	}
 }

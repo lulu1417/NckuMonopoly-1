@@ -11,13 +11,11 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.FloatControl;
 
 public class Music {
-	public Music(URL musicLocation) {
+	public Music(String musicPath) {
 		this.playing = true;
 		this.clipTimePosition = 0;
-		this.playMusic(musicLocation);
-	}
-	public void playMusic(URL musicLocation) {
 		try {
+			URL musicLocation = this.getClass().getResource(musicPath);
 			AudioInputStream audio = AudioSystem.getAudioInputStream(musicLocation);
 			clip = AudioSystem.getClip();
 			clip.open(audio);
@@ -27,7 +25,6 @@ public class Music {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
 	}
 	public void check() {
 		if(this.playing) {

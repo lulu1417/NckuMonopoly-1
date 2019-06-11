@@ -13,6 +13,7 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
 import ingame.Cell;
+import ingame.EndList;
 import ingame.Game;
 import ingame.GraphicImgItem;
 import ingame.GraphicItem;
@@ -27,15 +28,29 @@ public class PlayingPanel extends MainPanel{
 		this.mouse_pos = new Point(0,0);
 		//music button
 		try {
-			URL url = this.getClass().getResource("/sound.png");
+			URL url = this.getClass().getResource("/music.png");
 			ImageIcon image = new ImageIcon(ImageIO.read(url));
 			double sc = (double)this.getWidth() / Game.Width;
-			musicButton = new ClickButton(1150, 580, 100, 100, sc, image,"Music");
+			musicButton = new ClickButton(1150, 580, 100, 100, sc, image, "Music");
 			musicButton.setOpaque(false);
 			musicButton.setContentAreaFilled(false);
 			musicButton.setFocusPainted(false);
 			musicButton.setBorder(null);
 			this.add(musicButton);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		//sound button
+		try {
+			URL url = this.getClass().getResource("/sound.png");
+			ImageIcon image = new ImageIcon(ImageIO.read(url));
+			double sc = (double)this.getWidth() / Game.Width;
+			soundButton = new ClickButton(1080, 580, 100, 100, sc, image, "Sound");
+			soundButton.setOpaque(false);
+			soundButton.setContentAreaFilled(false);
+			soundButton.setFocusPainted(false);
+			soundButton.setBorder(null);
+			this.add(soundButton);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -155,11 +170,30 @@ public class PlayingPanel extends MainPanel{
 		eventName.kill();
 		eventName = null;
 	}
+	public void createEndList(int championID) {
+		if(this.endList != null) this.endList.kill();
+		this.endList = new EndList(championID, Game.graphicItems);
+	}
+	public void deleteEndList() {
+		if(this.endList != null) {
+			this.endList.kill();
+			this.endList = null;
+		}
+	}
 	public void changeMusicButton(boolean playing) {
+		try {
+			URL url = this.getClass().getResource(playing ? "/music.png" : "/music_no.png");
+			ImageIcon image = new ImageIcon(ImageIO.read(url));
+			this.musicButton.setIcon(image);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	public void changeSoundButton(boolean playing) {
 		try {
 			URL url = this.getClass().getResource(playing ? "/sound.png" : "/sound_no.png");
 			ImageIcon image = new ImageIcon(ImageIO.read(url));
-			this.musicButton.setIcon(image);
+			this.soundButton.setIcon(image);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -174,5 +208,6 @@ public class PlayingPanel extends MainPanel{
 	private ClickButton[] selections;
 	private ClickButton[] dieSelections;
 	private Point mouse_pos;
-	private ClickButton musicButton;
+	private ClickButton musicButton, soundButton;
+	private EndList endList;
 }
