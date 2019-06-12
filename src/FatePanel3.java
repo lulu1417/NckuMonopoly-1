@@ -11,7 +11,7 @@ import ingame.GraphicTextItem;
 public class FatePanel3 extends FatePanel{
 	
 	private int pointsCount=0;
-    private int timeleft=59;
+    private int timeleft=29;
     private int time=0;
     private static int manY=780;
     private int manX=800;
@@ -90,7 +90,7 @@ public class FatePanel3 extends FatePanel{
 		Rectangle aRectangle=new Rectangle((int)a.getX(),(int)a.getY(),(int)a.getW(),(int)a.getH());
 		Rectangle bRectangle=new Rectangle((int)b.getX(),(int)b.getY(),(int)b.getW(),(int)b.getH());
 		if(aRectangle.intersects(bRectangle)) {
-			pointsCount=pointsCount+1;
+			pointsCount=pointsCount+2;
 			b.kill();
 			del=true;
 		}

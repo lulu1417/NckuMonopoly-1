@@ -169,7 +169,6 @@ public class NckuMonopoly {
 								if(newNum>=this.rollingNum) ++newNum;
 							}
 							int cheatNumber = mainW.getPlayingPanel().getCheatNumber();
-							System.out.println(cheatNumber);
 							this.rollingNum = newNum = cheatNumber==0 ? newNum : cheatNumber; //debug
 							//die img
 							String dieImg = "/die" + newNum + ".png";
