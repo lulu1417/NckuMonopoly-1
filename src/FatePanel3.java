@@ -28,8 +28,10 @@ public class FatePanel3 extends FatePanel{
 		super(dim, 3);
 		background=new GraphicImgItem(800, 450, 1600, 900, "/background.png", this.graphicItems);
 		man=new GraphicImgItem(manX, manY,68 ,100 , "/man.png", this.graphicItems);
-		score=new GraphicTextItem(1500, 100,60  , "score="+pointsCount, this.graphicItems);
-		timeLeft=new GraphicTextItem(1500, 200, 60, "timeLeft:"+timeleft, this.graphicItems);
+		score=new GraphicTextItem(1300, 150,60  , "score="+pointsCount, this.graphicItems);
+		score.setCentered(false);
+		timeLeft=new GraphicTextItem(1300, 240, 60, "timeLeft:"+timeleft, this.graphicItems);
+		timeLeft.setCentered(false);
 	}
 	@Override
 	public void doTick() {
@@ -50,8 +52,11 @@ public class FatePanel3 extends FatePanel{
 		timeLeft.setText("time:"+timeleft);	
 		//heart falling
 		for(int m=0;m<i;m++) {
-			if(heartArray[m]!=null)
+			if(heartArray[m]!=null) {
 			    fallHeart(heartArray[m]);
+			    double scale = (Math.sin(time%30/30.0*2*Math.PI)*0.1+0.95);
+			    heartArray[m].setSize((int) (81*scale), (int) (74*scale));
+			}
 		}
 		
 		for(int j=0;j<i;j++) { 
@@ -90,7 +95,7 @@ public class FatePanel3 extends FatePanel{
 		Rectangle aRectangle=new Rectangle((int)a.getX(),(int)a.getY(),(int)a.getW(),(int)a.getH());
 		Rectangle bRectangle=new Rectangle((int)b.getX(),(int)b.getY(),(int)b.getW(),(int)b.getH());
 		if(aRectangle.intersects(bRectangle)) {
-			pointsCount=pointsCount+2;
+			pointsCount=pointsCount+1;
 			b.kill();
 			del=true;
 		}

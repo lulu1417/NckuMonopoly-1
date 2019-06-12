@@ -1,9 +1,11 @@
 //author: 方柏翔
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.util.concurrent.ThreadLocalRandom;
 
 import ingame.GraphicImgItem;
+import ingame.GraphicTextItem;
 
 public class FatePanel2 extends FatePanel{
 	//ctor
@@ -15,6 +17,14 @@ public class FatePanel2 extends FatePanel{
 		//SetInitialImage
 		stageBG= new GraphicImgItem(800,450,1600,900,"/stagebackground.png",this.graphicItems);
 		stageBG.setZ(-1.0f);
+		introduction = new GraphicImgItem(800,250,390,450,"/RabbitGameIntroduction.png",this.graphicItems);
+		introduction.setZ(5.0f);
+		turnAndScore = new GraphicImgItem(1525,50,150,100,"/TurnAndScore .png",this.graphicItems);
+		turnAndScore.setZ(-0.1f);
+		scoreText = new GraphicTextItem(1570,70,28,String.valueOf(score),this.graphicItems);
+		scoreText.setColor(Color.WHITE);
+		turnText = new GraphicTextItem(1570,30,28,String.valueOf(turn),this.graphicItems);
+		turnText.setColor(Color.WHITE);
 		hat[0]=	new GraphicImgItem(hatX[0],hatY,hatW,hatH,"/MagicHat.png",this.graphicItems);
 		hat[1]= new GraphicImgItem(hatX[1],hatY,hatW,hatH,"/MagicHat.png",this.graphicItems);
 		hat[2]= new GraphicImgItem(hatX[2],hatY,hatW,hatH,"/MagicHat.png",this.graphicItems);
@@ -31,29 +41,33 @@ public class FatePanel2 extends FatePanel{
 		//game playing
 		//...
 		
+		if(time == 30*3) 
+		{
+			introduction.kill();
+		}
 		
 		
-		if(time>=30*1&&time<=30*3) //Hat upward from 1s to 3s
+		if(time>=30*2&&time<=30*4) //Hat upward from 1s to 3s
 		{
 			hat[initialNum].setPosition(new Point((int)hat[initialNum].getX(),(int)hat[initialNum].getY()-4));
 			
 		}
 		
 		//rabbit appear from 3s ~ 4s
-		if(time==30*3) 
+		if(time==30*4) 
 		{
 			rabbit = new GraphicImgItem(rabbitX,hatY,hatW,hatH,"/rabbit.png",this.graphicItems);
 		}
-		if(time==30*4)
+		if(time==30*5)
 		{
 			rabbit.kill();
 		}
 		
-		if(time>=30*4&&time<=30*6) //Hat downward from 4s to 6s
+		if(time>=30*5&&time<=30*7) //Hat downward from 4s to 6s
 		{
 			hat[initialNum].setPosition(new Point((int)hat[initialNum].getX(),(int)hat[initialNum].getY()+4));
 		}
-		if(time>30*6) //Change hat from 6s
+		if(time>30*7) //Change hat from 6s
 		{ 
 			
 			if(changeCount<=10) //changeCount from 1 to 10
@@ -131,14 +145,15 @@ public class FatePanel2 extends FatePanel{
 						{
 							rabbit = new GraphicImgItem(hatX[RabbitNum], hatY, hatW, hatH, "/rabbitHappy.png", this.graphicItems);
 							result = new GraphicImgItem(800, 200, 400+animationCount*5, 300+animationCount*5, "/success.png", this.graphicItems);
-							
+							score += 10;
 						}
 						else 
 						{
-							hat[RabbitNum].kill();
 							rabbit = new GraphicImgItem(hatX[RabbitNum], hatY, hatW, hatH, "/rabbitCry.png", this.graphicItems);
 							result = new GraphicImgItem(800, 200, 400+animationCount*5, 300+animationCount*5, "/fail.png", this.graphicItems);
+							score -= 10;
 						}
+						scoreText.setText(String.valueOf(score));
 					}
 					else if(animationCount<30 && animationCount>=0) 
 					{
@@ -146,7 +161,18 @@ public class FatePanel2 extends FatePanel{
 					}
 					else if (animationCount == -30) 
 					{
-						this.gameEnd(20);
+						
+						if(turn != 3) 
+						{
+							reset();
+							turn++;
+							turnText.setText(String.valueOf(turn));
+						}
+						else 
+						{
+							this.gameEnd(score);
+						}
+						
 					}
 					animationCount--;
 					
@@ -216,19 +242,19 @@ public class FatePanel2 extends FatePanel{
 		switch(level) //xOffset必須為兩個hatX座標差距的一半的因數，目前為 (800-200)/2=300  的因數
 		{
 		case 0:
-			xoffset = 12;
+			xoffset = 15;
 			yoffset = 4;
 			break;
 		case 1:
-			xoffset = 25;
+			xoffset = 30;
 			yoffset = 8;
 			break;
 		case 2:
-			xoffset = 50;
+			xoffset = 75;
 			yoffset = 16;
 			break;
 		case 3:
-			xoffset = 100;
+			xoffset = 150;
 			yoffset = 32;
 			break;
 		default:
@@ -238,7 +264,7 @@ public class FatePanel2 extends FatePanel{
 	
 	private void pressedCheck() //PressedCheck
 	{
-		chooseHat = new GraphicImgItem(800, 200, 400, 116, "/chooseHat.png", this.graphicItems);
+		chooseHat = new GraphicImgItem(800, 200, 400, 130, "/chooseHat.png", this.graphicItems);
 		chooseHat.setLifeTime(1);
 		
 		for(int i=0;i<3;i++) 
@@ -266,12 +292,33 @@ public class FatePanel2 extends FatePanel{
 			}
 		}
 	}
+	public void reset() 
+	{
+		xoffset=12;yoffset=4;rabbitX=0;
+		initialNum=0;time=-1;changeCase = 0;changeCount=1;animationCount = 31;level = 0;pressedNum = 0;RabbitNum = 0;
+		tempRabbit = false;pressed = false;
+		hasRabbit[0] =false;hasRabbit[1] =false;hasRabbit[2] =false;
+		
+		rabbit.kill();
+		result.kill();
+		
+		hat[0].setPosition(new Point(hatX[0],hatY));
+		hat[1].setPosition(new Point(hatX[1],hatY));
+		hat[2].setPosition(new Point(hatX[2],hatY));
+		setHatZ();
+		
+		setBeginHat();
+		
+		changeCase = ThreadLocalRandom.current().nextInt(0, 3);
+	}
 	
-	public GraphicImgItem stageBG, rabbit, temphat, outline, result, chooseHat;
+	public GraphicImgItem stageBG, rabbit, temphat, outline, result, chooseHat, introduction, turnAndScore;
 	public GraphicImgItem[] hat = new GraphicImgItem[3];
 	
+	public GraphicTextItem scoreText,turnText;
+	
 	private int hatY=700,hatW=300,hatH=300,xoffset=12,yoffset=4, rabbitX=0;
-	private int initialNum=0 ,time=0, changeCase = 0, changeCount=1, animationCount = 30, level = 0, pressedNum = 0, RabbitNum = 0;
+	private int initialNum=0 ,time=0, changeCase = 0, changeCount=1, animationCount = 30, level = 0, pressedNum = 0, RabbitNum = 0, score = 0, turn = 1;
 	private int hatX[] = {200,800,1400};
 	private boolean tempRabbit = false, pressed = false;
 	private boolean hasRabbit[] = {false,false,false};

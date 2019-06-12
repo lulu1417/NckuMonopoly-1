@@ -54,6 +54,9 @@ public class GraphicTextItem extends GraphicItem{
 	public void setCentered(boolean centered) {
 		this.centered = centered;
 	}
+	public void setFontSize(int fontSize) {
+		this.fontSize = fontSize;
+	}
 	public void setText(String text) {
 		this.text = text;
 	}

@@ -13,6 +13,7 @@ import java.util.Iterator;
 
 import ingame.Game;
 import ingame.GraphicItem;
+import sound.Music;
 
 public class FatePanel extends MainPanel{
 	//ctor
@@ -23,6 +24,7 @@ public class FatePanel extends MainPanel{
 		this.leftPressed = false;
 		this.middlePressed = false;
 		this.rightPressed = false;
+		this.music = new Music("/Enter_the_Party.wav");
 		FatePanel self = this;
 		this.addMouseListener(new MouseAdapter() {
 			@Override
@@ -46,6 +48,7 @@ public class FatePanel extends MainPanel{
 				}
 			}
 		});
+		
 	}
 	public void paint(Graphics g) {
 		double sc = (double)this.getWidth() / Game.Width;
@@ -77,6 +80,7 @@ public class FatePanel extends MainPanel{
 		}
 	}
 	protected void gameEnd(int point) {
+		this.music.check();
 		Game.signals.add("Fate ended: "+ this.type + " " + point);
 	}
 	protected Point mouse() {
@@ -100,4 +104,5 @@ public class FatePanel extends MainPanel{
 	protected int type;
 	protected ArrayList<GraphicItem> graphicItems;
 	private boolean leftPressed, middlePressed, rightPressed;
+	private Music music;
 }
