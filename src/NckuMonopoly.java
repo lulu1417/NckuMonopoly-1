@@ -40,6 +40,19 @@ public class NckuMonopoly {
 			if(Game.gamestate == GameState.START) mainW.getStartPanel().timerRun();
 			for(int i=0; i<Game.graphicItems.size(); ++i) Game.graphicItems.get(i).timerRun();
 			
+			//focus
+			switch (Game.gamestate) {
+			case START:
+				mainW.getStartPanel().requestFocus();
+				break;
+			case FATE:
+				mainW.getFatePanel().requestFocus();
+				break;
+			default:
+				mainW.getPlayingPanel().requestFocus();
+				break;
+			}
+			
 			//receive signals
 			for(String signal: Game.signals) {
 				System.out.println("Got signal: "+signal);
@@ -155,7 +168,9 @@ public class NckuMonopoly {
 								newNum = rng.nextInt(5)+1;
 								if(newNum>=this.rollingNum) ++newNum;
 							}
-							this.rollingNum = newNum; //debug
+							int cheatNumber = mainW.getPlayingPanel().getCheatNumber();
+							System.out.println(cheatNumber);
+							this.rollingNum = newNum = cheatNumber==0 ? newNum : cheatNumber; //debug
 							//die img
 							String dieImg = "/die" + newNum + ".png";
 							GraphicItem die = new GraphicImgItem(Game.Width/2, Game.Height/2, 100, 100, dieImg, Game.graphicItems);

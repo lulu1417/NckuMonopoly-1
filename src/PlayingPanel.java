@@ -5,12 +5,15 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.MouseInfo;
 import java.awt.Point;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.net.URL;
 import java.util.Collections;
 import java.util.Comparator;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import javax.swing.JPanel;
 
 import ingame.Cell;
 import ingame.EndList;
@@ -65,6 +68,37 @@ public class PlayingPanel extends MainPanel{
 			ClickButton backButton = new ClickButton(Game.Width/2-w/2-8, Game.Height-50, w, h, sc, "回到標題", "Back");
 			this.add(backButton);
 		}
+		//keyboard
+		this.cheatNumber = 0;
+		this.setFocusable(true);
+		this.requestFocus();
+		this.addKeyListener(new KeyListener() {
+		    public void keyPressed(KeyEvent e) {
+		    	switch (e.getKeyCode()) {
+				case KeyEvent.VK_1: cheatNumber = 1; break;
+				case KeyEvent.VK_2: cheatNumber = 2; break;
+				case KeyEvent.VK_3: cheatNumber = 3; break;
+				case KeyEvent.VK_4: cheatNumber = 4; break;
+				case KeyEvent.VK_5: cheatNumber = 5; break;
+				case KeyEvent.VK_6: cheatNumber = 6; break;
+				default: break;
+				}
+		    }
+
+		    public void keyReleased(KeyEvent e) {
+		    	switch (e.getKeyCode()) {
+				case KeyEvent.VK_1: cheatNumber = 0; break;
+				case KeyEvent.VK_2: cheatNumber = 0; break;
+				case KeyEvent.VK_3: cheatNumber = 0; break;
+				case KeyEvent.VK_4: cheatNumber = 0; break;
+				case KeyEvent.VK_5: cheatNumber = 0; break;
+				case KeyEvent.VK_6: cheatNumber = 0; break;
+				default: break;
+				}
+	    	}
+
+		    public void keyTyped(KeyEvent e) {}
+		});
 	}
 	//method
 	public void paint(Graphics g) {
@@ -213,6 +247,9 @@ public class PlayingPanel extends MainPanel{
 	public Point getMouseLocation() {
 		return this.mouse_pos;
 	}
+	public int getCheatNumber() {
+		return this.cheatNumber;
+	}
 	//var
 	private GraphicItem cellNameBg, eventName, cellName;
 	private ClickButton rollingButton;
@@ -221,4 +258,5 @@ public class PlayingPanel extends MainPanel{
 	private Point mouse_pos;
 	private ClickButton musicButton, soundButton;
 	private EndList endList;
+	private int cheatNumber;
 }
