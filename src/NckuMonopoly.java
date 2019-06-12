@@ -86,6 +86,10 @@ public class NckuMonopoly {
 						} else {
 							currentPlayer.addLove(this.steppedScore);
 						}
+					if(!soundOff) {
+						if(this.steppedScore>0) Sound.playSound("/addPoints.wav");
+						else Sound.playSound("/deduct.wav");
+						}
 						this.tickStart(21);
 					} else if(signal.startsWith("Button clicked: Select die point:")) {
 						mainW.getPlayingPanel().deleteDieSelections();
