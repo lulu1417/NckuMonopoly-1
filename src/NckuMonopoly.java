@@ -259,7 +259,7 @@ public class NckuMonopoly {
 								int chanceNum = rng.nextInt(chanceCount);
 								switch (chanceNum) {
 								case 0: {
-									mainW.getPlayingPanel().showEventName("Java翹課，課業減半", Game.Width/2, Game.Height/2-100, 90);
+									mainW.getPlayingPanel().showEventName("機會：Java翹課，課業減半", Game.Width/2, Game.Height/2-100, 90);
 									currentPlayer.addLesson(-currentPlayer.getLesson()/2);
 									if(!soundOff) {
 										Sound.playSound("/badluck.wav");
@@ -268,7 +268,7 @@ public class NckuMonopoly {
 									tickStart(21);
 								} break;
 								case 1: {
-									mainW.getPlayingPanel().showEventName("對中發票，獲得200元", Game.Width/2, Game.Height/2-100, 90);
+									mainW.getPlayingPanel().showEventName("機會：對中發票，獲得200元", Game.Width/2, Game.Height/2-100, 90);
 									currentPlayer.addMoney(200);
 									if(!soundOff) {
 										Sound.playSound("/goodluck.wav");
@@ -277,7 +277,7 @@ public class NckuMonopoly {
 									tickStart(21);
 								} break;
 								case 2: {
-									mainW.getPlayingPanel().showEventName("撿到50元", Game.Width/2, Game.Height/2-100, 90);
+									mainW.getPlayingPanel().showEventName("機會：撿到50元", Game.Width/2, Game.Height/2-100, 90);
 									currentPlayer.addMoney(50);
 									if(!soundOff) {
 										Sound.playSound("/goodluck.wav");
@@ -292,14 +292,14 @@ public class NckuMonopoly {
 									for(int i=0;i<chanceSelections.length;++i)
 										if(!chanceSelections[i].equals(""))
 											chanceSelections[i] = chanceSelections[i] + chanceScore;
-									mainW.getPlayingPanel().createSelections("衣服穿反",chanceSelections[0],chanceSelections[1],chanceSelections[2]);
+									mainW.getPlayingPanel().createSelections("機會：衣服穿反",chanceSelections[0],chanceSelections[1],chanceSelections[2]);
 									if(!soundOff) {
 										Sound.playSound("/badluck.wav");
 										Sound.playSound("/deduct.wav");
 									}
 								} break;
 								case 4: {
-									mainW.getPlayingPanel().showEventName("考上研究所，學業+50", Game.Width/2, Game.Height/2-100, 90);
+									mainW.getPlayingPanel().showEventName("機會：考上研究所，學業+50", Game.Width/2, Game.Height/2-100, 90);
 									currentPlayer.addLesson(50);
 									if(!soundOff) {
 										Sound.playSound("/goodluck.wav");
@@ -308,11 +308,11 @@ public class NckuMonopoly {
 									tickStart(21);
 								} break;
 								case 5: {
-									mainW.getPlayingPanel().createDieSelections("搭乘台南Uber，自由選擇步數前進");
+									mainW.getPlayingPanel().createDieSelections("機會：搭乘台南Uber，自由選擇步數前進");
 									if(!soundOff) Sound.playSound("/goodluck.wav");
 								} break;
 								case 6: {
-									mainW.getPlayingPanel().showEventName("沒注意行人號誌，發生車禍", Game.Width/2, Game.Height/2-100, 90);
+									mainW.getPlayingPanel().showEventName("機會：沒注意行人號誌，發生車禍", Game.Width/2, Game.Height/2-100, 90);
 									if(!soundOff) Sound.playSound("/badluck.wav");
 									tickStart(131);
 								} break;
